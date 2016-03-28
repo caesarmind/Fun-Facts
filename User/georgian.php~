@@ -1,5 +1,3 @@
-<?php
-/**
  * WHMCS Language File
  * Georgian (ka)
  *
@@ -22,7 +20,6 @@
 if (!defined("WHMCS")) die("This file cannot be accessed directly");
 
 $_LANG['locale'] = "ka_GE";
-
 $_LANG['accountinfo'] = "ანგარიშის ინფორმაცია";
 $_LANG['accountstats'] = "ანგარიშის სტატისტიკა";
 $_LANG['addfunds'] = "თანხის დამატება";
