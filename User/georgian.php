@@ -65,14 +65,19 @@ $_LANG['all'] = "All";
 $_LANG['alreadyregistered'] = "ხართ რეგისტრირებული?";
 $_LANG['announcementsdescription'] = "View our latest news & announcements";
 $_LANG['announcementsnone'] = "No Announcements to Display";
+<<<<<<< HEAD
 $_LANG['announcementsrss'] = "View RSS Feed";
 $_LANG['announcementstitle'] = "Announcements";
+=======
+$_LANG['announcementsrss'] = "ნახეთ RSS";
+$_LANG['announcementstitle'] = "ახალი ამბები";
+>>>>>>> e1f3558473af653b7f75545ebc672a22e0179d50
 $_LANG['bannedbanexpires'] = "ბანის ხანგრძლიობა";
 $_LANG['bannedbanreason'] = "ბანის მიზეზი";
 $_LANG['bannedhasbeenbanned'] = "ბლოკირებულია";
 $_LANG['bannedtitle'] = "IP ბლოკირებულია";
 $_LANG['bannedyourip'] = "თქვენი IP";
-$_LANG['cartaddons'] = "Addons";
+$_LANG['cartaddons'] = "დანამატები";
 $_LANG['cartbrowse'] = "Browse Products &amp; Services";
 $_LANG['cartconfigdomainextras'] = "Configure Domain Extras";
 $_LANG['cartconfigoptionsdesc'] = "This product/service has some options which you can choose from below to customise your order.";
@@ -80,16 +85,25 @@ $_LANG['cartconfigserver'] = "სერვერის კონფიგურ�
 $_LANG['cartcustomfieldsdesc'] = "This product/service requires some additional information from you to allow us to process your order.";
 $_LANG['cartdomainsconfig'] = "Domains Configuration";
 $_LANG['cartdomainsconfigdesc'] = "Below you can configure the domain names in your shopping cart selecting the addon services you would like, providing required information for them and defining the nameservers that they will use.";
+<<<<<<< HEAD
 $_LANG['cartdomainshashosting'] = "Has Hosting";
 $_LANG['cartdomainsnohosting'] = "No Hosting! Click to Add";
 $_LANG['carteditproductconfig'] = "Edit Configuration";
 $_LANG['cartempty'] = "თქვენი კალათა ცარიელია.";
 $_LANG['cartemptyconfirm'] = "Are you sure you want to empty your shopping cart?";
 $_LANG['cartexistingclientlogin'] = "Existing Client Login";
+=======
+$_LANG['cartdomainshashosting'] = "აქვს ჰოსტინიგი";
+$_LANG['cartdomainsnohosting'] = "ჰოსტინგის გარეშე! დამატება";
+$_LANG['carteditproductconfig'] = "კონფიგურაციის შეცვლა";
+$_LANG['cartempty'] = "თქვენი კალათა ცარიელია.";
+$_LANG['cartemptyconfirm'] = "ნამდვილად გსურთ კალათის გასუფთავება?";
+$_LANG['cartexistingclientlogin'] = "არსებული მომხმარებელი";
+>>>>>>> e1f3558473af653b7f75545ebc672a22e0179d50
 $_LANG['cartexistingclientlogindesc'] = "To add this order to your existing account, you will need to login below.";
 $_LANG['cartnameserversdesc'] = "If you want to use custom nameservers then enter them below. By default, new domains will use our nameservers for hosting on our network.";
-$_LANG['cartproductaddons'] = "Product Addons";
-$_LANG['cartproductaddonschoosepackage'] = "Choose Package";
+$_LANG['cartproductaddons'] = "პროდუქტის დანამატები";
+$_LANG['cartproductaddonschoosepackage'] = "პაკეტის არჩევა";
 $_LANG['cartproductaddonsnone'] = "No Addons Available for your Products &amp; Services";
 $_LANG['cartproductconfig'] = "Product Configuration";
 $_LANG['cartproductdesc'] = "The product/service you have chosen has the following configuration options for you to choose from.";
@@ -104,7 +118,7 @@ $_LANG['carttaxupdateselectionsupdate'] = "განახლება";
 $_LANG['carttitle'] = "კალათა";
 $_LANG['changessavedsuccessfully'] = "ცვლილები წარმატებით შეინახა!";
 $_LANG['checkavailability'] = "ხელმისაწვდომობის შემოწმება";
-$_LANG['checkout'] = "Checkout";
+$_LANG['checkout'] = "შეკვეთა";
 $_LANG['choosecurrency'] = "ვალუტის არჩევა";
 $_LANG['choosedomains'] = "დომეინის არჩევა";
 $_LANG['clickheretologin'] = "შესვლისთვის აქ დააჭირეთ";
@@ -112,19 +126,20 @@ $_LANG['clientareaaccountaddons'] = "Account Addons";
 $_LANG['clientareaactive'] = "აქტივაცია";
 $_LANG['clientareaaddfundsdisabled'] = "We do not allow depositing funds in advance with us at the current time.";
 $_LANG['clientareaaddfundsnotallowed'] = "You must have at least one active order before you can add funds so you cannot proceed at the current time!";
-$_LANG['clientareaaddon'] = "Addon";
+$_LANG['clientareaaddon'] = "დანამატი";
 $_LANG['clientareaaddonorderconfirmation'] = "Thank You. Your order for the addon shown below has been placed. Please choose your method of payment from below.";
 $_LANG['clientareaaddonpricing'] = "ღირებულება";
-$_LANG['clientareaaddonsfor'] = "Addons for";
+$_LANG['clientareaaddonsfor'] = "დანამატები";
 $_LANG['clientareaaddress1'] = "მისამართი 1";
 $_LANG['clientareaaddress2'] = "მისამართი 2";
 $_LANG['clientareabwlimit'] = "ტრაფიკის ლიმიტი";
 <<<<<<< HEAD
 <<<<<<< HEAD
-$_LANG['clientareabwusage'] = "გამოყენებული ტრაფიკი";
+<<<<<<< HEAD
 =======
+>>>>>>> e1f3558473af653b7f75545ebc672a22e0179d50
+$_LANG['clientareabwusage'] = "გამოყენებული ტრაფიკი";
 $_LANG['clientareabwusage'] = "მოხმარებული ტრაფიკი";
->>>>>>> origin/master
 $_LANG['clientareacancel'] = "ცვლილებების გაუქმება";
 =======
 $_LANG['clientareabwusage'] = "Bandwidth usage";
@@ -136,21 +151,27 @@ $_LANG['clientareacancellationendofbillingperiod'] = "End of Billing Period";
 $_LANG['clientareacancellationimmediate'] = "მყისიერი";
 $_LANG['clientareacancellationtype'] = "გაუქმების ტიპი";
 $_LANG['clientareacancelled'] = "გაუქმებული";
-$_LANG['clientareacancelproduct'] = "Requesting Cancellation for";
-$_LANG['clientareacancelreason'] = "Briefly Describe your reason for Cancellation";
-$_LANG['clientareacancelrequest'] = "Account Cancellation Request";
-$_LANG['clientareacancelrequestbutton'] = "Request Cancellation";
+$_LANG['clientareacancelproduct'] = "გაუქმების მოთხოვნა";
+$_LANG['clientareacancelreason'] = "მოთხოვნის მიზეზის მოკლე აღწერა";
+$_LANG['clientareacancelrequest'] = "ანგარიშის გაუქმების მოთხოვნა";
+$_LANG['clientareacancelrequestbutton'] = "გაუქმების მოთხოვნა";
 $_LANG['clientareachangepassword'] = "შეცვალეთ თქვენი პაროლი";
+<<<<<<< HEAD
 $_LANG['clientareachangesuccessful'] = "Your Details Were Changed Successfully";
 <<<<<<< HEAD
 <<<<<<< HEAD
-$_LANG['clientareachoosecontact'] = "აირჩიეთ კონტაქტი";
 =======
+$_LANG['clientareachangesuccessful'] = "თქვენი მონაცემები წარმატებით შეიცვალა";
+>>>>>>> e1f3558473af653b7f75545ebc672a22e0179d50
+$_LANG['clientareachoosecontact'] = "აირჩიეთ კონტაქტი";
 $_LANG['clientareachoosecontact'] = "კონტაქტის არჩევა";
+<<<<<<< HEAD
 >>>>>>> origin/master
 =======
 $_LANG['clientareachoosecontact'] = "Choose Contact";
 >>>>>>> parent of 53a6703... Little Change
+=======
+>>>>>>> e1f3558473af653b7f75545ebc672a22e0179d50
 $_LANG['clientareacity'] = "ქალაქი";
 $_LANG['clientareacompanyname'] = "კომპანიის სახელწოდება";
 $_LANG['clientareaconfirmpassword'] = "პაროლის დადასტურება";
@@ -161,8 +182,8 @@ $_LANG['clientareacontactsemailsinvoice'] = "Invoice Emails - Invoices &amp; Bil
 $_LANG['clientareacontactsemailsproduct'] = "Product Emails - Order Details, Welcome Emails, etc...";
 $_LANG['clientareacontactsemailssupport'] = "Support Emails - Allow this user to open tickets in your account";
 $_LANG['clientareacountry'] = "ქვეყანა";
-$_LANG['clientareacurrentsecurityanswer'] = "Please enter your current answer";
-$_LANG['clientareacurrentsecurityquestion'] = "Please choose your current security question";
+$_LANG['clientareacurrentsecurityanswer'] = "შეიყვანეთ არსებული პასუხი";
+$_LANG['clientareacurrentsecurityquestion'] = "აირჩიეთ კითხვა უსაფრთხოებისათვის";
 $_LANG['clientareadeletecontact'] = "კონტაქტის წაშლა";
 $_LANG['clientareadeletecontactareyousure'] = "Are you sure you want to delete this contact?";
 $_LANG['clientareadescription'] = "View & update your account details";
@@ -173,7 +194,7 @@ $_LANG['clientareadomainnone'] = "დომენები არაა რე�
 $_LANG['clientareaemail'] = "ელ. ფოსტა";
 $_LANG['clientareaemails'] = "ჩემი წერილები";
 $_LANG['clientareaemailsdate'] = "გაგზავნის დრო";
-$_LANG['clientareaemailsintrotext'] = "Below is a history of all messages we have sent to you. It allows you to easily read any correspondance relating to your account in case you lose any of your emails.";
+$_LANG['clientareaemailsintrotext'] = "ქვემოთ მოყვანილია ჩვენ მიერ გაგზავნილი შეტყობინებების ისტორია. ეს გეხმარებათ თავიდანვე იხილოთ ყველა თქვენს ანგარიშზე გამოგზავნილი ინფორმაცია მათი დაკარგვისას.";
 $_LANG['clientareaemailssubject'] = "შეტყობინების თემა";
 $_LANG['clientareaerroraddress1'] = "თქვენ არ შეგიყვანიათ მისამართი (ველი 1)";
 $_LANG['clientareaerroraddress12'] = "Your address can only contain letters, numbers and spaces";
@@ -202,8 +223,8 @@ $_LANG['clientareafirstname'] = "სახელი";
 $_LANG['clientareafraud'] = "Fraud";
 $_LANG['clientareafullname'] = "მომხმარებლის სახელი";
 $_LANG['clientareaheader'] = "Welcome to our client area where you can manage your account with us. This page provides a brief overview of your account including any open support requests and unpaid invoices.  Please ensure you keep your contact details up to date.";
-$_LANG['clientareahostingaddons'] = "Addons";
-$_LANG['clientareahostingaddonsintro'] = "You have the following addons for this product.";
+$_LANG['clientareahostingaddons'] = "დანამატები";
+$_LANG['clientareahostingaddonsintro'] = "თქვენ გაქვთ შემდეგი დამანამტები ამ პროდუქტისთვის.";
 $_LANG['clientareahostingaddonsview'] = "ნახვა";
 $_LANG['clientareahostingamount'] = "რაოდენობა";
 $_LANG['clientareahostingdomain'] = "დომეინი";
@@ -213,19 +234,24 @@ $_LANG['clientareahostingregdate'] = "რეგისტრაციის თ�
 $_LANG['clientarealastname'] = "გვარი";
 $_LANG['clientarealastupdated'] = "ბოლოს განახლდა";
 $_LANG['clientarealeaveblank'] = "Leave blank unless you want to change your password.";
-$_LANG['clientareamodifydomaincontactinfo'] = "Modify Domain Contact Information";
+$_LANG['clientareamodifydomaincontactinfo'] = "დომეინის საკონტაქტო ინფორმაციის შეცვლა";
 $_LANG['clientareamodifynameservers'] = "Modify Nameservers";
-$_LANG['clientareamodifywhoisinfo'] = "Modify WHOIS Contact Information";
+$_LANG['clientareamodifywhoisinfo'] = "WHOIS საკონტაქტო ინფორმაციის შეცვლა";
 $_LANG['clientareanameserver'] = "Nameserver";
 <<<<<<< HEAD
 <<<<<<< HEAD
-$_LANG['clientareanavaddcontact'] = "დაამატეთ ახალი კონტაქტი";
+<<<<<<< HEAD
 =======
+>>>>>>> e1f3558473af653b7f75545ebc672a22e0179d50
+$_LANG['clientareanavaddcontact'] = "დაამატეთ ახალი კონტაქტი";
 $_LANG['clientareanavaddcontact'] = "კონტაქტის დამატება";
+<<<<<<< HEAD
 >>>>>>> origin/master
 =======
 $_LANG['clientareanavaddcontact'] = "Add New Contact";
 >>>>>>> parent of 53a6703... Little Change
+=======
+>>>>>>> e1f3558473af653b7f75545ebc672a22e0179d50
 $_LANG['clientareanavchangecc'] = "შეცვალეთ საკრედიტო ბარათის დეტალები";
 $_LANG['clientareanavchangepw'] = "პაროლის შეცვლა";
 $_LANG['clientareanavdetails'] = "ჩემი მონაცემები";
@@ -238,13 +264,18 @@ $_LANG['clientareanavservices'] = "ჩემი სერვისები";
 $_LANG['clientareanavsupporttickets'] = "ჩემი დახმარების ბილეთები";
 <<<<<<< HEAD
 <<<<<<< HEAD
-$_LANG['clientareanocontacts'] = "კონტაქტები არ მოიძებნა";
+<<<<<<< HEAD
 =======
+>>>>>>> e1f3558473af653b7f75545ebc672a22e0179d50
+$_LANG['clientareanocontacts'] = "კონტაქტები არ მოიძებნა";
 $_LANG['clientareanocontacts'] = "კონტაქტები არაა ნაპოვნი";
+<<<<<<< HEAD
 >>>>>>> origin/master
 =======
 $_LANG['clientareanocontacts'] = "No Contacts Found";
 >>>>>>> parent of 53a6703... Little Change
+=======
+>>>>>>> e1f3558473af653b7f75545ebc672a22e0179d50
 $_LANG['clientareapassword'] = "პაროლი";
 $_LANG['clientareapending'] = "Pending";
 $_LANG['clientareapendingtransfer'] = "Pending Transfer";
@@ -424,7 +455,7 @@ $_LANG['downloadspopular'] = "Most Popular Downloads";
 $_LANG['downloadsnone'] = "No Downloads to Display";
 $_LANG['downloadstitle'] = "Downloads";
 $_LANG['email'] = "Email";
-$_LANG['emptycart'] = "კალათა ცარიელია;
+$_LANG['emptycart'] = "კალათა ცარიელია";
 $_LANG['existingpassword'] = "ამჟამინდელი პაროლი";
 $_LANG['existingpasswordincorrect'] = "თქვენ არასწორად შეიყვანეთ ამჟამინდელი პაროლი.";
 $_LANG['firstpaymentamount'] = "First Payment Amount";
@@ -2055,7 +2086,7 @@ $_LANG['sso']['redirectafterlogin'] = "You will be redirected after login";
 $_LANG['oauth']['badTwoFactorAuthModule'] = "Bad Two-Factor Auth Module. Please contact support.";
 $_LANG['oauth']['permAccessNameAndEmail'] = "Access your name and email address";
 
-$_LANG['errorButTryAgain'] = "შეცდომა დაფიქსირდა.  სცადეთ კიდევ ერთხელ.";
+$_LANG['errorButTryAgain'] = "შეცდომა დაფიქსირდა. სცადეთ კიდევ ერთხელ.";
 
 
 ////////// End of english language file.  Do not place any translation strings below this line!
