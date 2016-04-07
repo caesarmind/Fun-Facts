@@ -517,7 +517,7 @@ $_LANG['knowledgebaseArticleRatingThanks'] = "მადლობა სტატ
 $_LANG['language'] = "ენა";
 $_LANG['latefee'] = "Late Fee";
 $_LANG['latefeeadded'] = "დამატებულია";
-$_LANG['latestannouncements'] = "Latest Announcements";
+$_LANG['latestannouncements'] = "განცხადებები";
 $_LANG['loginbutton'] = "ავტორიზაცია";
 $_LANG['loginemail'] = "ელ.ფოსტის მისამართი";
 $_LANG['loginforgotten'] = "დაგავიწყდათ პაროლი?";
@@ -813,8 +813,8 @@ $_LANG['supportticketssystemdescription'] = "The support ticket system allows us
 $_LANG['supportticketsticketattachments'] = "Attachments";
 $_LANG['supportticketsticketcreated'] = "Ticket Created";
 $_LANG['supportticketsticketcreateddesc'] = "Your ticket has been successfully created. An email has been sent to your address with the ticket information. If you would like to view this ticket now you can do so.";
-$_LANG['supportticketsticketid'] = "Ticket ID";
-$_LANG['supportticketsticketsubject'] = "Subject";
+$_LANG['supportticketsticketid'] = "ბილეთის ID";
+$_LANG['supportticketsticketsubject'] = "თემა";
 $_LANG['supportticketsticketsubmit'] = "დადასტურება";
 $_LANG['supportticketsticketurgency'] = "Urgency";
 $_LANG['supportticketsticketurgencyhigh'] = "მაღალი";
@@ -1577,37 +1577,37 @@ $_LANG['ssofatalerror'] = "A fatal error occurred. Please contact support.";
 
 # Version 6.0
 
-$_LANG['announcementschoosemonth'] = "Choose Month";
-$_LANG['announcementsbymonth'] = "By Month";
-$_LANG['announcementsolder'] = "Older Announcements";
-$_LANG['createnewcontact'] = "New Contact...";
+$_LANG['announcementschoosemonth'] = "აირჩიეთ თვე";
+$_LANG['announcementsbymonth'] = "თვეებით";
+$_LANG['announcementsolder'] = "ძველი განცხადებები";
+$_LANG['createnewcontact'] = "ახალი კონტაქტი...";
 $_LANG['due'] = "Due";
-$_LANG['affiliatessignups'] = "Signups";
+$_LANG['affiliatessignups'] = "რეგისტრაცია";
 $_LANG['affiliatesconversionrate'] = "Conversions";
-$_LANG['affiliatesclicks'] = "Clicks";
-$_LANG['contacts'] = "Contacts";
+$_LANG['affiliatesclicks'] = "კლიკები";
+$_LANG['contacts'] = "კონტაქტები";
 $_LANG['backtoservicedetails'] = "Back to Service Details";
 $_LANG['invoicesintro'] = "Your invoice history with us";
 
-$_LANG['sidebars']['viewAccount']['yourAccount'] = "Your Account";
-$_LANG['sidebars']['viewAccount']['myDetails'] = "My Details";
+$_LANG['sidebars']['viewAccount']['yourAccount'] = "თქვენი ანგარიში";
+$_LANG['sidebars']['viewAccount']['myDetails'] = "ჩემი მონაცემები";
 $_LANG['sidebars']['viewAccount']['billingInformation'] = "Billing Information";
 $_LANG['sidebars']['viewAccount']['contacts/subAccounts'] = "Contacts/Sub-Accounts";
-$_LANG['sidebars']['viewAccount']['changePassword'] = "Change Password";
-$_LANG['sidebars']['viewAccount']['securitySettings'] = "Security Settings";
-$_LANG['sidebars']['viewAccount']['emailHistory'] = "Email History";
+$_LANG['sidebars']['viewAccount']['changePassword'] = "პაროლის შეცვლა";
+$_LANG['sidebars']['viewAccount']['securitySettings'] = "უსაფრთხოების მონაცემები";
+$_LANG['sidebars']['viewAccount']['emailHistory'] = "ელ.ფოსტის ისტორია";
 
 $_LANG['aboutsecurityquestions'] = "Why security questions?";
 $_LANG['registersecurityquestionblurb'] = "Setting a security question will provide extra security, as all changes to your account require providing the additional information from your question.";
 
 $_LANG['update'] = "განახლება";
-$_LANG['yourinfo'] = "Your Info";
+$_LANG['yourinfo'] = "თქვენი ინფო";
 $_LANG['shortcuts'] = "Shortcuts";
 
 $_LANG['yourservices'] = "თქვენი სერვისები";
 $_LANG['yourdomains'] = "თქვენი დომეინები";
 $_LANG['yourtickets'] = "თქვენი ბილეთები";
-$_LANG['managecontacts'] = "Manage Contacts";
+$_LANG['managecontacts'] = "კონტაქტების მართვა";
 $_LANG['billingdetails'] = "Billing Details";
 $_LANG['homechooseproductservice'] = "Choose a product/service to manage:";
 
@@ -1617,15 +1617,15 @@ $_LANG['noinvoicesduemsg'] = "You have no unpaid invoices at this time.";
 
 $_LANG['expiringsoon'] = "Expiring Soon";
 
-$_LANG['notice'] = "Notice";
-$_LANG['networkstatussubtitle'] = "News & Information";
+$_LANG['notice'] = "შენიშნვნა";
+$_LANG['networkstatussubtitle'] = "სიახლეები";
 
 $_LANG['myaccount'] = "ჩემი ანგარიში";
 
-$_LANG['manageproduct'] = "Manage Product";
-$_LANG['overview'] = "Overview";
-$_LANG['servername'] = "Server Name";
-$_LANG['visitwebsite'] = "Visit Website";
+$_LANG['manageproduct'] = "სერვისის მართვა";
+$_LANG['overview'] = "ზოგადი მიმოხილვა";
+$_LANG['servername'] = "სერვერის დასახელება";
+$_LANG['visitwebsite'] = "ეწვიეთ საიტს";
 $_LANG['whoisinfo'] = "WHOIS Info";
 
 $_LANG['tableshowing'] = "Showing _START_ to _END_ of _TOTAL_ entries";
@@ -1634,10 +1634,10 @@ $_LANG['tablefiltered'] = "(filtered from _MAX_ total entries)";
 $_LANG['tablelength'] = "Show _MENU_ entries";
 $_LANG['tableloading'] = "Loading...";
 $_LANG['tableprocessing'] = "Processing...";
-$_LANG['tablepagesfirst'] = "First";
-$_LANG['tablepageslast'] = "Last";
-$_LANG['tablepagesnext'] = "Next";
-$_LANG['tablepagesprevious'] = "Previous";
+$_LANG['tablepagesfirst'] = "პირველი";
+$_LANG['tablepageslast'] = "ბოლო";
+$_LANG['tablepagesnext'] = "შემდეგი";
+$_LANG['tablepagesprevious'] = "წინა";
 $_LANG['tableviewall'] = "All";
 $_LANG['tableentersearchterm'] = "Enter search term...";
 
@@ -1685,7 +1685,7 @@ $_LANG['enteremail'] = "Enter email";
 
 $_LANG['passwordtips'] = "<strong>Tips for a good password</strong><br />Use both upper and lowercase characters<br />Include at least one symbol (# $ ! % &amp; etc...)<br />Don't use dictionary words";
 
-$_LANG['regdate'] = "Reg Date";
+$_LANG['regdate'] = "რეგ. თარიღი";
 $_LANG['nextdue'] = "Next Due";
 
 $_LANG['domaincheckertagline'] = "Find the perfect domain name for you...";
@@ -1708,7 +1708,7 @@ $_LANG['alltldpricing'] = "All TLD Pricing";
 $_LANG['quotesdesc'] = "Quotes we have generated for you";
 $_LANG['quotesrejected'] = "Rejected";
 
-$_LANG['ticketsyourhistory'] = "Your ticket history";
+$_LANG['ticketsyourhistory'] = "ბილეთების ისტორია";
 
 $_LANG['clientareaemaildesc'] = "Your email history with us";
 
@@ -1732,9 +1732,9 @@ $_LANG['quotestageexpired'] = "Expired";
 $_LANG['ticketinfo'] = "Ticket Information";
 $_LANG['customfield'] = "Custom Fields";
 
-$_LANG['domainsActive'] = "Active";
-$_LANG['domainsExpired'] = "Expired";
-$_LANG['domainsCancelled'] = "Cancelled";
+$_LANG['domainsActive'] = "აქტიური";
+$_LANG['domainsExpired'] = "ვადაგასული";
+$_LANG['domainsCancelled'] = "გაუქმებული";
 $_LANG['domainsFraud'] = "Fraud";
 $_LANG['domainsPending'] = "Pending";
 $_LANG['domainsPendingTransfer'] = "Pending Transfer";
@@ -1743,12 +1743,12 @@ $_LANG['domainsExpiringInTheNext90Days'] = "Expiring within 90 Days";
 $_LANG['domainsExpiringInTheNext180Days'] = "Expiring within 180 Days";
 $_LANG['domainsExpiringInMoreThan180Days'] = "Expiring in 180+ Days";
 
-$_LANG['kbtagcloud'] = "Tag Cloud";
+$_LANG['kbtagcloud'] = "თეგების ღრუბელი";
 
 $_LANG['cancellationrequestedexplanation'] = "There is an outstanding cancellation request for this product/service";
-$_LANG['cancellationrequested'] = "Cancellation Requested";
+$_LANG['cancellationrequested'] = "გაუქმება მოთხოვნილია";
 
-$_LANG['yourrecenttickets'] = "Your Recent Tickets";
+$_LANG['yourrecenttickets'] = "ბოლო ბილეთები";
 
 $_LANG['domains']['deTermsDescription1'] = "To register a new domain, transfer or change registrant information the registrant must explicitly accept the .DE terms and conditions.";
 $_LANG['domains']['deTermsDescription2'] = "(See full text of .de terms and conditions: http://www.denic.de/en/bedingungen.html.)";
@@ -1777,9 +1777,9 @@ $_LANG['subaccountpermsquotes'] = "View & Accept Quotes";
 
 $_LANG['chooselanguage'] = "ენის არჩევა";
 
-$_LANG['success'] = "Success";
-$_LANG['error'] = "Error";
-$_LANG['print'] = "Print";
+$_LANG['success'] = "წარმატება";
+$_LANG['error'] = "შეცდომა";
+$_LANG['print'] = "ამობეჭვდა";
 $_LANG['invoicelineitems'] = "Invoice Items";
 
 $_LANG['quotelineitems'] = "Quote Items";
@@ -1793,7 +1793,7 @@ $_LANG['clientAlerts']['creditCardExpiring'] = "Your credit card :creditCardType
 $_LANG['clientAlerts']['domainsExpiringSoon'] = "You have :numberOfDomains domain(s) expiring within the next :days days.";
 $_LANG['clientAlerts']['invoicesUnpaid'] = "You have :numberOfInvoices unpaid invoice(s). Pay them early for peace of mind.";
 $_LANG['clientAlerts']['invoicesOverdue'] = "You have :numberOfInvoices overdue invoice(s) with a total balance due of :balanceDue. Pay them now to avoid any interuptions in service.";
-$_LANG['clientAlerts']['creditBalance'] = "You have a credit balance of :creditBalance.";
+$_LANG['clientAlerts']['creditBalance'] = "თქვენს საკერდიტო ბალანსზეა :creditBalance.";
 
 // Client homepage panels
 $_LANG['clientHomePanels']['unpaidInvoices'] = "გადაუხდელი ინვოისები";
@@ -1814,13 +1814,13 @@ $_LANG['clientHomePanels']['affiliateSummaryWithdrawalReady'] = "Your current co
 $_LANG['upgradeNotPossible'] = "Upgrading this product is not possible.  If you believe you've reached this page in error, please notify our support department.  Otherwise, go back and double check your selection.";
 
 $_LANG['hostingInfo'] = "Hosting Information";
-$_LANG['additionalInfo'] = "Additional Information";
-$_LANG['resourceUsage'] = "Resource Usage";
-$_LANG['primaryIP'] = "Primary IP";
+$_LANG['additionalInfo'] = "დამატებითი ინფორმაცია";
+$_LANG['resourceUsage'] = "რესურსების მოხმარება";
+$_LANG['primaryIP'] = "ძირითადი IP";
 $_LANG['assignedIPs'] = "Assigned IPs";
-$_LANG['diskSpace'] = "Disk Space";
+$_LANG['diskSpace'] = "დისკური სივრცე";
 $_LANG['bandwidth'] = "ტრაფიკი";
-$_LANG['registered'] = "Registered";
+$_LANG['registered'] = "რეგისტრირებულია";
 $_LANG['upgrade'] = "პაკეტის გაუმჯობესება";
 
 $_LANG['downdoadsdesc'] = "Manuals, programs, and other files";
@@ -1831,9 +1831,9 @@ $_LANG['updateWhoisContact'] = "Update the WHOIS contact information for your do
 $_LANG['changeRegLock'] = "Change the registrar lock status for your domain";
 $_LANG['renewYourDomain'] = "Renew Your Domain";
 
-$_LANG['oops'] = "Oops";
-$_LANG['goback'] = "Go Back";
-$_LANG['returnhome'] = "Return Home";
+$_LANG['oops'] = "უუპს";
+$_LANG['goback'] = "გაბრუნდი უკან";
+$_LANG['returnhome'] = "მთავარზე დაბრუნება";
 $_LANG['blankCustomField'] = "(no value)";
 
 $_LANG['viewAll'] = "View All";
@@ -1847,43 +1847,43 @@ $_LANG['paymentstodate'] = "Payments to Date";
 $_LANG['balancedue'] = "Balance Due";
 $_LANG['submitpayment'] = "Submit Payment";
 
-$_LANG['domaincheckeravailable'] = "Available";
-$_LANG['domaincheckertransferable'] = "Available to Transfer";
-$_LANG['domaincheckertaken'] = "Taken";
-$_LANG['domaincheckeradding'] = "Adding";
-$_LANG['domaincheckeradded'] = "Added";
+$_LANG['domaincheckeravailable'] = "ხელმისაწვდომია";
+$_LANG['domaincheckertransferable'] = "ტრანსფერისთვის ხელმისაწვდომია";
+$_LANG['domaincheckertaken'] = "დაკავებულია";
+$_LANG['domaincheckeradding'] = "ემატება";
+$_LANG['domaincheckeradded'] = "დაემატა";
 $_LANG['domaincheckernomoresuggestions'] = "That's all the results we have for you! If you still haven't found what you're looking for, please try a different search term or keyword.";
 $_LANG['domaincheckerunabletooffertld'] = "Unfortunately we are unable to register this TLD at this time";
 $_LANG['domaincheckerbulkplaceholder'] = "Enter up to 20 domain names.\nEach name must be on a separate line.\n\nExamples:\nexample.com\nexample.net";
 
-$_LANG['domainchecker']['suggestiontakentitle'] = "Domain Unavailable";
+$_LANG['domainchecker']['suggestiontakentitle'] = "დომეინი ხელმიუწვდომელია";
 $_LANG['domainchecker']['suggestiontakenmsg'] = "Unfortunately the domain you selected is unavailable. This can sometimes occur if the domain has been registered recently. Please go back and choose another domain.";
-$_LANG['domainchecker']['suggestiontakenchooseanother'] = "Choose another domain";
+$_LANG['domainchecker']['suggestiontakenchooseanother'] = "სხვა დომეინის შერჩევა";
 
-$_LANG['domainchecker']['alreadyincarttitle'] = "Already In Cart";
-$_LANG['domainchecker']['alreadyincartmsg'] = "This domain is already in your shopping cart. Proceed to checkout now to complete your purchase.";
-$_LANG['domainchecker']['alreadyincartcheckoutnow'] = "Checkout Now";
+$_LANG['domainchecker']['alreadyincarttitle'] = "უკვე კალათშია";
+$_LANG['domainchecker']['alreadyincartmsg'] = "ეს დომეინი უკვე კალათშია. გადადით გადახდის გვერდზე და დაასრულეთ შეკვეთა.";
+$_LANG['domainchecker']['alreadyincartcheckoutnow'] = "ახლავე გადაიხადე";
 
-$_LANG['genericerror']['title'] = "Oops, something went wrong!";
-$_LANG['genericerror']['msg'] = "Please try again and if the problem persists, please contact our support team.";
+$_LANG['genericerror']['title'] = "უუპს, რაღაც შეცდომა დაფიქსირდა!";
+$_LANG['genericerror']['msg'] = "სცადეთ კიდევ ერთხელ, თუკი შეცდომა კვლავ დაფიქსირდა მიმართეთ ტექნიკურ განყოფილებას.";
 
 # Licensing Addon
 
-$_LANG['licensingaddon']['mylicenses'] = "My Licenses";
-$_LANG['licensingaddon']['latestdownload'] = "Latest Download";
-$_LANG['licensingaddon']['downloadnow'] = "Download Now";
+$_LANG['licensingaddon']['mylicenses'] = "ჩემი ლიცენზიები";
+$_LANG['licensingaddon']['latestdownload'] = "ბოლო გადმოწერები";
+$_LANG['licensingaddon']['downloadnow'] = "გადმოწერე ახლავე";
 $_LANG['licensingaddon']['licensekey'] = "License Key";
 $_LANG['licensingaddon']['validdomains'] = "Valid Domains";
 $_LANG['licensingaddon']['validips'] = "Valid IPs";
 $_LANG['licensingaddon']['validdirectory'] = "Valid Directory";
-$_LANG['licensingaddon']['status'] = "License Status";
+$_LANG['licensingaddon']['status'] = "ლიცენზიის სტატუსი";
 $_LANG['licensingaddon']['reissue'] = "Reissue";
 $_LANG['licensingaddon']['reissuestatusmsg'] = "The Valid Domain, IP and Directory will be detected & saved the next time the license is accessed.";
-$_LANG['licensingaddon']['manageLicense'] = "Manage License";
+$_LANG['licensingaddon']['manageLicense'] = "ლიცენზიების მართვა";
 
 $_LANG['affiliateWithdrawalSummary'] = "You will be able to request a withdrawal as soon as your balance reaches the minimum required amount of :amountForWithdrawal.";
 
-$_LANG['projectManagement']['activeProjects'] = "Your Active Projects";
+$_LANG['projectManagement']['activeProjects'] = "თქვენი აქტიური პროექტები";
 
 # cPanel Module
 
@@ -1892,21 +1892,21 @@ $_LANG['cPanel']['addonsExtras'] = "Addons & Extras";
 $_LANG['cPanel']['purchaseActivate'] = "Purchase & Activate";
 
 $_LANG['cPanel']['usageStats'] = "Usage Statistics";
-$_LANG['cPanel']['diskUsage'] = "Disk Usage";
-$_LANG['cPanel']['bandwidthUsage'] = "Bandwidth Usage";
-$_LANG['cPanel']['usageStatsBwLimitNear'] = "You are nearing your bandwidth limit.";
-$_LANG['cPanel']['usageStatsDiskLimitNear'] = "You are nearing your disk space limit.";
+$_LANG['cPanel']['diskUsage'] = "გამოყენებული სივრცე";
+$_LANG['cPanel']['bandwidthUsage'] = "გამოყენებული ტრაფიკი";
+$_LANG['cPanel']['usageStatsBwLimitNear'] = "უახლოვდებით ტრაფიკის ლიმიტს.";
+$_LANG['cPanel']['usageStatsDiskLimitNear'] = "უახლოვდებით დისკური სივრცის ლიმიტს.";
 $_LANG['cPanel']['usageUpgradeNow'] = "Upgrade Now";
-$_LANG['cPanel']['usageLastUpdated'] = "Last Updated";
+$_LANG['cPanel']['usageLastUpdated'] = "ბოლოს განახლდა";
 
 $_LANG['cPanel']['quickShortcuts'] = "Quick Shortcuts";
-$_LANG['cPanel']['emailAccounts'] = "Email Accounts";
+$_LANG['cPanel']['emailAccounts'] = "ელ.ფოსტის ანგარიშები";
 $_LANG['cPanel']['forwarders'] = "Forwarders";
 $_LANG['cPanel']['autoresponders'] = "Autoresponders";
-$_LANG['cPanel']['fileManager'] = "File Manager";
+$_LANG['cPanel']['fileManager'] = "ფაილების მენეჯერი";
 $_LANG['cPanel']['backup'] = "Backup";
-$_LANG['cPanel']['subdomains'] = "Subdomains";
-$_LANG['cPanel']['addonDomains'] = "Addon Domains";
+$_LANG['cPanel']['subdomains'] = "ქვედომეინები";
+$_LANG['cPanel']['addonDomains'] = "დამატებითი დომეინები";
 $_LANG['cPanel']['cronJobs'] = "Cron Jobs";
 $_LANG['cPanel']['mysqlDatabases'] = "MySQL Databases";
 $_LANG['cPanel']['phpMyAdmin'] = "phpMyAdmin";
@@ -1914,10 +1914,10 @@ $_LANG['cPanel']['awstats'] = "Awstats";
 
 $_LANG['cPanel']['createEmailAccount'] = "Quick Create Email Account";
 $_LANG['cPanel']['usernamePlaceholder'] = "Yourname";
-$_LANG['cPanel']['passwordPlaceholder'] = "Desired Password";
-$_LANG['cPanel']['create'] = "Create";
-$_LANG['cPanel']['emailAccountCreateSuccess'] = "Email account created successfully!";
-$_LANG['cPanel']['emailAccountCreateFailed'] = "Email account creation failed: ";
+$_LANG['cPanel']['passwordPlaceholder'] = "სასურველი პაროლი";
+$_LANG['cPanel']['create'] = "შექმნა";
+$_LANG['cPanel']['emailAccountCreateSuccess'] = "ელ.ფოსტის ანგარიში წარმატებით შეიქმნა!";
+$_LANG['cPanel']['emailAccountCreateFailed'] = "ელ.ფოსტის ანგარიში ვერ შეიქმნა: ";
 
 $_LANG['cPanel']['packageNotActive'] = "This hosting package is currently";
 $_LANG['cPanel']['statusPendingNotice'] = "You cannot begin using this hosting account until it is activated.";
@@ -1925,7 +1925,7 @@ $_LANG['cPanel']['statusSuspendedNotice'] = "You cannot continue to use or manag
 
 $_LANG['cPanel']['billingOverview'] = "Billing Overview";
 
-$_LANG['liveHelp']['chatNow'] = "Chat Now";
+$_LANG['liveHelp']['chatNow'] = "მიწერე ახლავე";
 
 $_LANG['quotes'] = "Quotes";
 
@@ -1972,7 +1972,7 @@ $_LANG['orderForm']['lastName'] = "გვარი";
 $_LANG['orderForm']['phoneNumber'] = "ტელეფონის ნომერი";
 $_LANG['orderForm']['billingAddress'] = "იურიდიული მისმართი";
 $_LANG['orderForm']['companyName'] = "კომპანიის დასახელება";
-$_LANG['orderForm']['optional'] = "Optional";
+$_LANG['orderForm']['optional'] = "არასავალდებულო";
 $_LANG['orderForm']['streetAddress'] = "საცხოვრებლის მისამართი";
 $_LANG['orderForm']['streetAddress2'] = "საცხოვრებლის მისამართი 2";
 $_LANG['orderForm']['city'] = "ქალაქი";
@@ -1986,19 +1986,19 @@ $_LANG['orderForm']['paymentDetails'] = "Payment Details";
 $_LANG['orderForm']['preferredPaymentMethod'] = "Please choose your preferred method of payment.";
 $_LANG['orderForm']['cardNumber'] = "ბარათის ნომერი";
 $_LANG['orderForm']['cvv'] = "CVV Security Number";
-$_LANG['orderForm']['additionalNotes'] = "Additional Notes";
-$_LANG['orderForm']['continueToClientArea'] = "Continue To Client Area";
+$_LANG['orderForm']['additionalNotes'] = "დამათებითი შენიშვნები";
+$_LANG['orderForm']['continueToClientArea'] = "გადადი მოხმარებლის არეში";
 $_LANG['orderForm']['reviewDomainAndAddons'] = "Please review your domain name selections and any addons that are available for them.";
-$_LANG['orderForm']['addToCart'] = "Add to Cart";
-$_LANG['orderForm']['addedToCartRemove'] = "Added to Cart (Remove)";
+$_LANG['orderForm']['addToCart'] = "კალათაში დამატება";
+$_LANG['orderForm']['addedToCartRemove'] = "დაემატა კალათაში (წაშლა)";
 $_LANG['orderForm']['configureDesiredOptions'] = "Configure your desired options and continue to checkout.";
-$_LANG['orderForm']['haveQuestionsContact'] = "Have questions? Contact our sales team for assistance.";
-$_LANG['orderForm']['use'] = "Use";
-$_LANG['orderForm']['check'] = "Check";
-$_LANG['orderForm']['transfer'] = "Transfer";
-$_LANG['orderForm']['domainAddedToCart'] = "This domain has been added to your cart.";
+$_LANG['orderForm']['haveQuestionsContact'] = "გაქთ კითხვები? დაუკავშირდით ჩვენს ოპერატორს.";
+$_LANG['orderForm']['use'] = "გამოყენება";
+$_LANG['orderForm']['check'] = "შემოწმება";
+$_LANG['orderForm']['transfer'] = "ტრანსფერი";
+$_LANG['orderForm']['domainAddedToCart'] = "დომეინი თქვენს კალათაში დაემატა.";
 $_LANG['orderForm']['registerLongerAndSave'] = "Register for longer and save!";
-$_LANG['orderForm']['tryRegisteringInstead'] = "Try registering this domain instead.";
+$_LANG['orderForm']['tryRegisteringInstead'] = "ნაცვლად ამისა, სცადეთ ამ დომეინის რეგისტრირება.";
 $_LANG['orderForm']['domainAvailabilityCached'] = "Domain availability results are cached which may lead to recently registered domains being shown as available.";
 $_LANG['orderForm']['submitTicket'] = "ბილეთის გახსნა";
 $_LANG['orderForm']['promotionAccepted'] = "Promotion Code Accepted! Your order total has been updated.";
@@ -2047,7 +2047,7 @@ $_LANG['startingat'] = "Starting at";
 $_LANG['yourdomainplaceholder'] = 'თქვენი დომეინი';
 $_LANG['yourtldplaceholder'] = 'com';
 
-$_LANG['subaccountpermsproductsso'] = "Perform Single Sign-On";
+$_LANG['subaccountpermsproductsso'] = "ერთჯერადად შესვლა";
 
 $_LANG['sso']['title'] = "Single Sign-On";
 $_LANG['sso']['summary'] = "Third party applications leverage the Single Sign-On functionality to provide direct access to your billing account without you having to re-authenticate.";
