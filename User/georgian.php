@@ -1632,13 +1632,13 @@ $_LANG['tableshowing'] = "Showing _START_ to _END_ of _TOTAL_ entries";
 $_LANG['tableempty'] = "Showing 0 to 0 of 0 entries";
 $_LANG['tablefiltered'] = "(filtered from _MAX_ total entries)";
 $_LANG['tablelength'] = "Show _MENU_ entries";
-$_LANG['tableloading'] = "Loading...";
+$_LANG['tableloading'] = "დაელოდეთ...";
 $_LANG['tableprocessing'] = "Processing...";
 $_LANG['tablepagesfirst'] = "პირველი";
 $_LANG['tablepageslast'] = "ბოლო";
 $_LANG['tablepagesnext'] = "შემდეგი";
 $_LANG['tablepagesprevious'] = "წინა";
-$_LANG['tableviewall'] = "All";
+$_LANG['tableviewall'] = "ყველა";
 $_LANG['tableentersearchterm'] = "Enter search term...";
 
 $_LANG['actions'] = "Actions";
