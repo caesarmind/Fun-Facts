@@ -1,0 +1,6 @@
+requests>=2.28
+beautifulsoup4>=4.11
+lxml>=4.9
+openpyxl>=3.1   # recipe_library.xlsx (optional)
+# optional, only for --render (JavaScript fallback for gemrielia.ge):
+#   pip install playwright && playwright install chromium

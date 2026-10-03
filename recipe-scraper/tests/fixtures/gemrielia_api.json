@@ -1,0 +1,7 @@
+{"_comment": "Synthetic response for POST https://gemrielia.ge/api/recipe/ -- field names follow the site's bundle (title, category.id, difficult, time, serving, description, ingredients); the exact live shape is unverified, which is why ingredient_texts() accepts HTML, text, Editor.js and object lists.",
+ "result": {"id": 9724, "title": "ქოქოსის და ბანანის ბურთულები - მხოლოდ 3 ინგრედიენტით!",
+  "alias": "kokosis-da-bananis-burtulebi-mxolod-3-ingredientit", "image": "/media/uploads/2026/10-01/qoqosis-burtulebi-1790854219.webp",
+  "category": {"id": 7, "title": "დესერტები"}, "difficult": 1, "time": 10, "serving": 12,
+  "ingredients": "<ul class=\"unorderedlist\"><li>ბანანი - 1 ცალი (დაახლოებით 100–120 გრ)</li><li>ქოქოსის ფანტელი - 60 გ</li><li>კაკაო - 30 გ</li></ul>",
+  "description": "<p>ბანანი კარგად დაჭყლიტეთ, დაუმატეთ ქოქოსის ფანტელი და კაკაო.</p><p>მიღებული მასისგან გააკეთეთ პატარა ბურთულები და ამოავლეთ ქოქოსის ფანტელში.</p>",
+  "publish_date": "2026-10-01T15:25:27+0400"}}
