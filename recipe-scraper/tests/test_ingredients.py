@@ -162,3 +162,16 @@ def test_dish_names_back_to_nominative():
     assert nominative("ჩიხირთმის", vocab) == "ჩიხირთმა"
     assert nominative("პესტოს", vocab) == "პესტო"
     assert dish_name("ფელამუში მარტივად და სწრაფად") == "ფელამუში"
+
+
+def test_purpose_lines_are_ingredients_not_headings():
+    assert not is_group_header("კარაქი ფორმისთვის")
+    assert is_group_header("ცომისთვის") and is_group_header("შოკოლადის კრემისთვის")
+    i = one("კარაქი ფორმისთვის")
+    assert (i.name, i.note) == ("კარაქი", "ფორმისთვის")
+
+
+def test_more_units():
+    assert (one("1 ჩ/ჭ ნუტელა").unit_norm, one("1 ჩ/ჭ ნუტელა").ml) == ("cup", 250)
+    assert one("2 ღერი ნიახური").unit_norm == "stalk"
+    assert one("1 ტარო სიმინდი").unit_norm == "pcs"
