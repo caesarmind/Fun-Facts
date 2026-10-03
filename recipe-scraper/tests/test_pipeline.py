@@ -122,8 +122,13 @@ def test_full_pipeline(tmp_path):
     openpyxl = pytest.importorskip("openpyxl")
     from recipe_scraper.xlsx import export_xlsx
     wb = openpyxl.load_workbook(export_xlsx(db, out / "recipe_library.xlsx"))
-    assert wb.sheetnames == ["Summary", "Ingredient library", "Dish library", "Recipes", "Recipe ingredients",
-                             "Nutrition tables"]
+    assert wb.sheetnames == ["Summary", "Ingredient library", "Dish library", "Photos", "Recipes",
+                             "Recipe ingredients", "Nutrition tables"]
+    photos = wb["Photos"]
+    from urllib.parse import unquote
+    assert photos.max_row == 6 and unquote(photos["E2"].hyperlink.target) == photos["E2"].value  # page link
+    assert photos["E2"].hyperlink.target.isascii()
+    assert {photos.cell(r, 7).value for r in range(2, 7)} == {"yes"}  # one recipe per dish here
     summary = {row[0]: row[1:] for row in wb["Summary"].iter_rows(min_row=2, max_row=7, values_only=True)}
     assert summary["fiber"] == (1, 9, 1, 9, 0)  # recipes, lines, dishes, ingredients, failures
     assert summary["all sites"][0] == 5

@@ -90,8 +90,10 @@ Global options: `--db`, `--cache`, `--delay`, `--offline`, `--refresh`, `--user-
 
 ## Photos
 
-Every recipe's main photo URL is stored (`image_url` in `recipes.csv`, `photo url` in the workbook),
-and every dish gets a representative photo (from its first recipe that has one). To download them:
+Every recipe's main photo URL is stored, together with the page it was published on:
+`photos.csv` and the workbook's **Photos** sheet list one row per photo (dish, recipe, site,
+photo url, published on, author, and `dish photo = yes` for the photo chosen to represent the dish).
+In the workbook the links are clickable. To download the files themselves:
 
 ```bash
 python -m recipe_scraper images --per-dish            # one photo per dish  -> data/images/<site>/

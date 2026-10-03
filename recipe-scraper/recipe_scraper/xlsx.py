@@ -4,6 +4,7 @@ from __future__ import annotations
 import json
 from datetime import date
 from pathlib import Path
+from urllib.parse import quote
 
 from .db import DB
 
@@ -23,7 +24,10 @@ def export_xlsx(db: DB, path: str | Path) -> Path:
     head_fill = PatternFill("solid", fgColor="3B5B4F")
     body_font = Font(name=FONT, size=10)
 
-    def sheet(title: str, header: list[str], rows, widths: dict[int, int] | None = None, first: bool = False):
+    link_font = Font(name=FONT, size=10, color="0563C1", underline="single")
+
+    def sheet(title: str, header: list[str], rows, widths: dict[int, int] | None = None, first: bool = False,
+              links: tuple[str, ...] = ()):
         ws = wb.active if first else wb.create_sheet()
         ws.title = title
         ws.append(header)
@@ -32,9 +36,16 @@ def export_xlsx(db: DB, path: str | Path) -> Path:
         for cell in ws[1]:
             cell.font, cell.fill = head_font, head_fill
             cell.alignment = Alignment(vertical="center", wrap_text=True)
+        link_cols = {i for i, h in enumerate(header) if h in links}
         for row in ws.iter_rows(min_row=2):
             for cell in row:
-                cell.font = body_font
+                if cell.column - 1 in link_cols and isinstance(cell.value, str) and cell.value.startswith("http"):
+                    # tap to open the photo / the page it was published on; the target is percent-encoded
+                    # because some phone apps won't open links containing Georgian letters
+                    cell.hyperlink = quote(cell.value, safe=":/?=&%#+,;@~")
+                    cell.font = link_font
+                else:
+                    cell.font = body_font
         ws.freeze_panes = "A2"
         if ws.max_row > 1:
             ws.auto_filter.ref = ws.dimensions
@@ -84,8 +95,9 @@ def export_xlsx(db: DB, path: str | Path) -> Path:
         "Recipe ingredients: every ingredient line as published (raw) and parsed (name, quantity, unit, grams/ml).",
         "  ml uses 1 tbsp (ს/კ) = 15 ml, 1 tsp (ჩ/კ) = 5 ml, 1 cup (ჭიქა) = 250 ml. grams are only filled from weights.",
         "Recipes: calories_site is what the site prints (usually per serving), not computed.",
-        "Photos: 'photo url' is the recipe's main image on the site; 'photo file' is filled after running the images "
-        "command. Photos belong to the sites/authors — get permission before showing them in an app.",
+        "Photos: one row per recipe photo with the page it was published on (tap a link to open it); 'dish photo' = "
+        "yes marks the photo representing the dish. Photos belong to the sites/authors — get permission before "
+        "showing them in an app.",
         f"Counts as of {date.today().isoformat()}.",
     ]
     for line in notes:
@@ -113,7 +125,13 @@ def export_xlsx(db: DB, path: str | Path) -> Path:
           ([r["name"], r["recipes"], r["sites"], r["key"], *[json.loads(r["per_site"]).get(s, 0) for s in sources],
             j(r["variants"]), j(r["categories"]), j(r["top_ingredients"], ", "), r["image"], r["image_file"],
             (json.loads(r["urls"]) or [""])[0]] for r in dishes),
-          {1: 34, 4: 18, 5 + n: 50, 6 + n: 30, 7 + n: 60, 8 + n: 50, 9 + n: 30, 10 + n: 50})
+          {1: 34, 4: 18, 5 + n: 50, 6 + n: 30, 7 + n: 60, 8 + n: 50, 9 + n: 30, 10 + n: 50},
+          links=("photo url", "example url"))
+
+    # ---- Photos: every photo and the page it was published on
+    from .export import PHOTO_HEADER, photo_rows
+    sheet("Photos", [h.replace("_", " ") for h in PHOTO_HEADER], photo_rows(db),
+          {1: 34, 2: 40, 3: 12, 4: 60, 5: 60, 6: 16, 7: 11, 8: 30}, links=("photo url", "published on"))
 
     # ---- Recipes
     recipes = db.query("SELECT r.*, i.path AS image_file FROM recipes r LEFT JOIN images i ON i.recipe_id = r.id "
@@ -123,7 +141,7 @@ def export_xlsx(db: DB, path: str | Path) -> Path:
            "photo url", "photo file"],
           ([r["id"], r["source"], r["title"], r["dish_name"], j(r["categories"]), r["servings"], r["total_minutes"],
             r["calories"], r["n_ingredients"], r["url"], r["image"], r["image_file"]] for r in recipes),
-          {1: 7, 3: 40, 4: 30, 5: 30, 10: 60, 11: 60, 12: 30})
+          {1: 7, 3: 40, 4: 30, 5: 30, 10: 60, 11: 60, 12: 30}, links=("url", "photo url"))
 
     # ---- Recipe ingredients
     titles = {r["id"]: r["title"] for r in recipes}

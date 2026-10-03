@@ -31,6 +31,21 @@ def _j(value: str | None, sep: str = " | ") -> str:
     return str(data)
 
 
+PHOTO_HEADER = ["dish", "recipe", "site", "photo_url", "published_on", "author", "dish_photo", "image_file"]
+
+
+def photo_rows(db: DB) -> list[list]:
+    """Every recipe photo with the page it was published on, grouped by dish.
+    dish_photo = "yes" marks the photo chosen to represent the dish."""
+    rows = db.query(
+        "SELECT r.id, r.source, r.title, r.url, r.image, r.author, r.dish_name, r.dish_key, d.name AS dish, "
+        "d.image_recipe_id, i.path AS image_file FROM recipes r "
+        "LEFT JOIN dishes d ON d.key = r.dish_key LEFT JOIN images i ON i.recipe_id = r.id "
+        "WHERE r.image IS NOT NULL AND r.image != '' ORDER BY COALESCE(d.name, r.dish_name, r.title), r.id")
+    return [[r["dish"] or r["dish_name"], r["title"], r["source"], r["image"], r["url"], r["author"],
+             "yes" if r["image_recipe_id"] == r["id"] else "", r["image_file"]] for r in rows]
+
+
 def export_all(db: DB, out_dir: str | Path) -> dict[str, int]:
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
@@ -98,6 +113,8 @@ def export_all(db: DB, out_dir: str | Path) -> dict[str, int]:
         counts["nutrition.csv"] = _write_csv(
             out / "nutrition.csv", ["source", "group", "name", "kcal_100g", "protein_100g", "fat_100g", "carbs_100g"],
             ([r["source"], r["grp"], r["name"], r["kcal"], r["protein"], r["fat"], r["carbs"]] for r in nutrition))
+
+    counts["photos.csv"] = _write_csv(out / "photos.csv", PHOTO_HEADER, photo_rows(db))
 
     failures = db.query("SELECT * FROM failures ORDER BY source, url")
     counts["failures.csv"] = _write_csv(out / "failures.csv", ["source", "url", "reason", "at"],
