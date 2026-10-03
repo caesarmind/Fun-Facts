@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+from datetime import date
 from pathlib import Path
 
 from .db import DB
@@ -49,21 +50,28 @@ def export_xlsx(db: DB, path: str | Path) -> Path:
             return sep.join(f"{k}: {v}" for k, v in data.items())
         return sep.join(str(x) for x in data)
 
-    # ---- Summary (counts are formulas over the data sheets)
+    # ---- Summary. Plain values, not formulas: openpyxl can't store computed results, and formula cells
+    # without them show up blank in phone previewers until Excel recalculates.
     ws = sheet("Summary", ["site", "recipes", "ingredient lines", "dishes on this site", "ingredients on this site",
                            "failed pages"], [], {1: 16, 2: 12, 3: 16, 4: 18, 5: 22, 6: 13}, first=True)
     n_ing = db.query("SELECT COUNT(*) FROM ingredients")[0][0]
     n_dish = db.query("SELECT COUNT(*) FROM dishes")[0][0]
-    for i, s in enumerate(sources):
-        r = i + 2
-        fails = db.query("SELECT COUNT(*) FROM failures WHERE source=?", (s,))[0][0]
-        col = get_column_letter(5 + i)  # in_<site> column in both library sheets
-        ws.append([s, f"=COUNTIF(Recipes!B:B,A{r})", f"=COUNTIF('Recipe ingredients'!B:B,A{r})",
-                   f"=COUNTIF('Dish library'!{col}:{col},\">0\")",
-                   f"=COUNTIF('Ingredient library'!{col}:{col},\">0\")", fails])
+    per_site = {s: [0, 0, 0, 0, 0] for s in sources}
+    for r in db.query("SELECT source, COUNT(*), COALESCE(SUM(n_ingredients), 0) FROM recipes GROUP BY source"):
+        per_site[r[0]][0:2] = [r[1], r[2]]
+    for table, col in (("dishes", 2), ("ingredients", 3)):
+        for r in db.query(f"SELECT per_site FROM {table}"):
+            for s in json.loads(r[0] or "{}"):
+                if s in per_site:
+                    per_site[s][col] += 1
+    for r in db.query("SELECT source, COUNT(*) FROM failures GROUP BY source"):
+        if r[0] in per_site:
+            per_site[r[0]][4] = r[1]
+    for s in sources:
+        ws.append([s, *per_site[s]])
+    ws.append(["all sites", sum(v[0] for v in per_site.values()), sum(v[1] for v in per_site.values()),
+               n_dish, n_ing, sum(v[4] for v in per_site.values())])
     total = len(sources) + 2
-    ws.append(["all sites", f"=SUM(B2:B{total - 1})", f"=SUM(C2:C{total - 1})",
-               "=COUNTA('Dish library'!A:A)-1", "=COUNTA('Ingredient library'!A:A)-1", f"=SUM(F2:F{total - 1})"])
     for cell in ws[total]:
         cell.font = Font(name=FONT, size=10, bold=True)
     notes = [
@@ -76,7 +84,7 @@ def export_xlsx(db: DB, path: str | Path) -> Path:
         "Recipe ingredients: every ingredient line as published (raw) and parsed (name, quantity, unit, grams/ml).",
         "  ml uses 1 tbsp (ს/კ) = 15 ml, 1 tsp (ჩ/კ) = 5 ml, 1 cup (ჭიქა) = 250 ml. grams are only filled from weights.",
         "Recipes: calories_site is what the site prints (usually per serving), not computed.",
-        f"Totals: {n_ing} ingredients, {n_dish} dishes.",
+        f"Counts as of {date.today().isoformat()}.",
     ]
     for line in notes:
         ws.append([line])

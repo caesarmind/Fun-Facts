@@ -116,7 +116,9 @@ def test_full_pipeline(tmp_path):
     wb = openpyxl.load_workbook(export_xlsx(db, out / "recipe_library.xlsx"))
     assert wb.sheetnames == ["Summary", "Ingredient library", "Dish library", "Recipes", "Recipe ingredients",
                              "Nutrition tables"]
-    assert wb["Summary"]["B2"].value == "=COUNTIF(Recipes!B:B,A2)"
+    summary = {row[0]: row[1:] for row in wb["Summary"].iter_rows(min_row=2, max_row=7, values_only=True)}
+    assert summary["fiber"] == (1, 9, 1, 9, 0)  # recipes, lines, dishes, ingredients, failures
+    assert summary["all sites"][0] == 5
     assert wb["Recipes"].max_row == 6
 
     mine = tmp_path / "my_ingredients.csv"
