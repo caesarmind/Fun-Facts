@@ -74,7 +74,33 @@ def dish_name(title: str) -> str:
     scored = sorted(enumerate(segments), key=lambda p: (len(CLICKBAIT.findall(p[1])), p[0]))
     best = scored[0][1]
     words = [w for w in best.split() if fold(w).strip(".,!?") not in DISH_FILLER]
-    return clean(" ".join(words)) or best
+    name = clean(" ".join(words)) or best
+    # "ფელამუში მარტივად და სწრაფად" -> "ფელამუში და" -> "ფელამუში"
+    name = re.sub(r"^(?:(?:და|ან)\s+)+|(?:\s+(?:და|ან))+$", "", name)
+    return clean(re.sub(r"\b(და|ან)(\s+\1)+\b", r"\1", name)) or best
+
+
+def is_genitive_recipe_title(title: str) -> bool:
+    """'ჩინური ტორტის რეცეპტი' -> the dish name keeps the genitive ending."""
+    return bool(re.search(r"(?:ის|[აეოუ]ს)\s+რეცეპტ\w*\s*$", clean(title)))
+
+
+def nominative(name: str, vocab: Counter) -> str:
+    """Turn the last word of 'ჩინური ტორტის' back into the nominative ('ჩინური ტორტი'), choosing among
+    the possible endings the form that appears most often elsewhere in the scraped titles."""
+    words = name.split()
+    if not words:
+        return name
+    w = words[-1]
+    if w.endswith("ის") and len(w) > 3:
+        stem = w[:-2]
+        options = [stem + "ი", stem + "ა", stem + "ე", stem + "ო", stem + "უ"]
+    elif len(w) > 3 and w.endswith("ს") and w[-2] in "აეოუ":
+        options = [w[:-1]]
+    else:
+        return name
+    best = max(options, key=lambda o: (vocab.get(o, 0), o.endswith("ი")))
+    return " ".join(words[:-1] + [best])
 
 
 def dish_identity(title: str, aliases: dict[str, str] | None = None) -> tuple[str, str]:
@@ -128,14 +154,21 @@ def build(db: DB, aliases_path: str | Path | None = None) -> dict[str, int]:
     recipes = db.query("SELECT id, source, title, categories, url FROM recipes")
     dgroups: dict[str, dict] = defaultdict(lambda: {"variants": Counter(), "recipes": [], "per_site": Counter(),
                                                     "categories": Counter(), "ingredients": Counter(), "urls": []})
+    vocab = Counter(w for r in recipes if not is_genitive_recipe_title(r["title"] or "")
+                    for w in clean(r["title"]).split())
     dish_updates = []
     for r in recipes:
         key, name = dish_identity(r["title"] or "", aliases)
+        if is_genitive_recipe_title(r["title"] or ""):
+            name = nominative(name, vocab)
+            weight = 0.5  # a sibling title in the nominative wins ties
+        else:
+            weight = 1
         dish_updates.append((name, key or None, r["id"]))
         if not key:
             continue
         g = dgroups[key]
-        g["variants"][name] += 1
+        g["variants"][name] += weight
         g["recipes"].append(r["id"])
         g["per_site"][r["source"]] += 1
         g["categories"].update(json.loads(r["categories"] or "[]"))

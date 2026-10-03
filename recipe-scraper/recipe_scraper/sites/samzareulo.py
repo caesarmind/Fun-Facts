@@ -24,12 +24,13 @@ class Samzareulo(Site):
     base_url = "https://samzareulo.net"
 
     def discover(self, fx: Fetcher) -> Iterator[str]:
-        seen: set[str] = set()
+        seen: set[str] = set()  # post ids: one recipe can be listed under /receptebi/ and a chef's section
 
         def emit(url: str):
             url = normalize_url(url)
-            if RECIPE_RE.search(url) and url not in seen:
-                seen.add(url)
+            m = re.search(r"/(\d+)-[^/]+\.html$", url)
+            if RECIPE_RE.search(url) and m and m.group(1) not in seen:
+                seen.add(m.group(1))
                 return url
             return None
 

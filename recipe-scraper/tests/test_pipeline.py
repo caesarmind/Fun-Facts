@@ -48,7 +48,9 @@ ROUTES = {
     ("GET", "https://samzareulo.net/sitemap.xml"): sitemap(
         "https://samzareulo.net/receptebi/", "https://samzareulo.net/rchevebi/188-badagi.html",
         "https://samzareulo.net/receptebi/223-imeruli-xachapuri.html"),
-    ("GET", "https://samzareulo.net/lastnews/"): links("https://samzareulo.net/receptebi/223-imeruli-xachapuri.html"),
+    ("GET", "https://samzareulo.net/lastnews/"): links(
+        "https://samzareulo.net/receptebi/223-imeruli-xachapuri.html",
+        "https://samzareulo.net/rcheuli-mzareulebi/naira-beridze/223-imeruli-xachapuri.html"),  # same post, other section
     ("GET", "https://samzareulo.net/receptebi/223-imeruli-xachapuri.html"): fx("samzareulo.html"),
     ("GET", "https://kerdzebi.ge/sitemap.xml"): sitemap("https://kerdzebi.ge/kategoriis/tsomeuli",
                                                        "https://kerdzebi.ge/recepti/pasta-carbonara-1784725429472"),

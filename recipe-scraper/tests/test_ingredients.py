@@ -132,3 +132,33 @@ def test_plausibility_filter():
     assert is_plausible(one("1 ს.კ. შაქარი"))
     assert not is_plausible(one("2 გემოვნებით ავტ მაკა ჯღარკავა"))
     assert not is_plausible(one("2 გემოვნებით შეწვით გახურებულ ტაფაზე ვე მხრიდან. მზა ხაჭაპურებს კარაქით წაუსვათ."))
+
+
+def test_names_ending_in_number_words_are_not_split():
+    # "ნიორი" ends in "ორი" (two), "ხურმათი" in "ათი" (ten)
+    for name in ("ნიორი", "ხურმათი"):
+        i = one(name)
+        assert (i.name, i.quantity) == (name, None)
+
+
+def test_unit_abbreviation_slash_is_not_an_alternative():
+    i = one("გემოვნებით 0.500 ჩ/კ დაფქული შავი პილპილი")
+    assert (i.name, i.quantity, i.unit_norm, i.optional) == ("დაფქული შავი პილპილი", 0.5, "tsp", True)
+
+
+def test_number_plus_to_taste_phrase_is_implausible():
+    from recipe_scraper.ingredients import is_plausible
+    assert not is_plausible(one("1 გემოვნებით ტაფის ხაჭაპური რომელსაც ჩვეულებრივისგან ვერ გამოარჩევ"))
+    assert is_plausible(one("1 ჩ/კ მარილი გემოვნებით"))
+
+
+def test_dish_names_back_to_nominative():
+    from collections import Counter
+    from recipe_scraper.library import is_genitive_recipe_title, nominative
+    vocab = Counter({"სალათა": 3, "ჩიხირთმა": 1})
+    assert is_genitive_recipe_title("ჩინური ტორტის რეცეპტი") and not is_genitive_recipe_title("ჩინური ტორტი")
+    assert nominative("ჩინური ტორტის", vocab) == "ჩინური ტორტი"
+    assert nominative("ქათმის სალათის", vocab) == "ქათმის სალათა"
+    assert nominative("ჩიხირთმის", vocab) == "ჩიხირთმა"
+    assert nominative("პესტოს", vocab) == "პესტო"
+    assert dish_name("ფელამუში მარტივად და სწრაფად") == "ფელამუში"

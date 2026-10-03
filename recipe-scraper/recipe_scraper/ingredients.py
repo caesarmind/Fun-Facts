@@ -59,7 +59,7 @@ _WORD_NUM = {
 }
 _NUM = (
     rf"(?:\d+(?:[.,]\d+)?\s*[{_FRAC_CHARS}]|\d+\s+\d+\s*/\s*\d+|\d+\s*/\s*\d+|\d+(?:[.,]\d+)?|[{_FRAC_CHARS}]"
-    rf"|(?:{'|'.join(sorted(_WORD_NUM, key=len, reverse=True))})(?!\w))"
+    rf"|(?<!\w)(?:{'|'.join(sorted(_WORD_NUM, key=len, reverse=True))})(?!\w))"
 )
 _QTY = rf"(?P<q1>{_NUM})(?:\s*(?:-|–|—|ან)\s*(?P<q2>{_NUM}))?"
 
@@ -71,6 +71,7 @@ TO_TASTE = [
 APPROX = ["დაახლოებით", "დაახლ.", "დაახ.", "მინიმუმ", "მაქსიმუმ", "~", "≈"]
 _TO_TASTE_RE = re.compile(r"(?<!\w)(" + "|".join(re.escape(w) for w in sorted(TO_TASTE, key=len, reverse=True)) + r")(?!\w)")
 _APPROX_RE = re.compile(r"^(?:" + "|".join(re.escape(w) for w in APPROX) + r")\s*")
+_LEAD_TASTE = re.compile(r"^(?:" + "|".join(re.escape(w) for w in TO_TASTE) + r")\s+")
 # "გასაფორმებლად" (for decoration), "შესაწვავად" (for frying), "სერვირებისთვის" (for serving) ...
 _PURPOSE_RE = re.compile(r"(?<!\w)(?:(?:გა|შე|მო|და|წა|ჩა|ა|გადა|ამო|ჩამო)?სა\w+ად|\w+ისთვის)(?!\w)")
 _DECOR_RE = re.compile(r"გასაფორმებ|დეკორ|სერვირ")
@@ -161,7 +162,7 @@ def make_line(raw: str, name: str, qty_text: str | None = None, unit_text: str |
     notes = list(notes or [])
     name, optional = _strip_notes(clean(name), notes)
     # Alternatives: "გუანჩალე ან პანჩეტა" -> name = first option, rest kept as a note.
-    alt = re.split(r"\s+ან\s+|\s*/\s*(?=\D)", name, maxsplit=1)
+    alt = re.split(r"\s+ან\s+|\s+/\s+|(?<=[^\W\d_]{2})/(?=[^\W\d_]{2})", name, maxsplit=1)
     if len(alt) == 2 and alt[0] and alt[1]:
         name = alt[0].strip()
         notes.append("ან " + alt[1].strip())
@@ -230,13 +231,14 @@ def parse_line(raw: str, group: str | None = None) -> list[IngredientLine]:
     text = re.sub(r"\.$", "", text)
     if not text:
         return []
-    approx = _APPROX_RE.match(text)
-    if approx and re.match(r"\d", text[approx.end():]):
-        # "დაახლ. 500 გრ ფქვილი" -> parse the rest, keep "დაახლ." as a note
-        lines = parse_line(text[approx.end():], group)
+    lead = _APPROX_RE.match(text) or _LEAD_TASTE.match(text)
+    if lead and re.match(r"\d", text[lead.end():]):
+        # "დაახლ. 500 გრ ფქვილი", "გემოვნებით 0.5 ჩ/კ პილპილი" -> parse the rest, keep the word as a note
+        lines = parse_line(text[lead.end():], group)
         for i in lines:
             i.raw = clean(raw)
-            i.note = "; ".join(x for x in (approx.group(0).strip(), i.note) if x)
+            i.note = "; ".join(x for x in (lead.group(0).strip(), i.note) if x)
+            i.optional = i.optional or bool(_TO_TASTE_RE.match(lead.group(0)))
         return lines
 
     # 1) "name - amount" / "name: amount"
@@ -272,6 +274,8 @@ def parse_line(raw: str, group: str | None = None) -> list[IngredientLine]:
 
 _CREDIT = re.compile(r"^(ავტ\.?|ავტორი|წყარო|source)(?!\w)", re.I)
 # A sentence break ("…მხრიდან. მზა…") — but not abbreviations like "ს.კ. შაქარი" or "სუფ. კოვზი".
+# "1 გემოვნებით ტაფის ხაჭაპური რომელსაც…" — a number followed by "to taste" and a long phrase.
+_NUM_TASTE = re.compile(r"^\d+\s+(?:" + "|".join(re.escape(w) for w in TO_TASTE) + r")\s")
 _SENTENCE = re.compile(r"[^\W\d_]{5,}\.\s+[^\W\d_]{2,}")
 
 
@@ -279,8 +283,10 @@ def is_plausible(line: IngredientLine) -> bool:
     """Reject lines that are clearly not ingredients (sentences, author credits) — some sites
     re-publish recipes with instructions or credits pasted into the ingredient list."""
     name = line.name
+    raw = clean(line.raw)
     return (bool(name) and len(name.split()) <= 8 and len(name) <= 80
-            and not _CREDIT.match(name) and not _SENTENCE.search(clean(line.raw)))
+            and not _CREDIT.match(name) and not _SENTENCE.search(raw)
+            and not (_NUM_TASTE.match(raw) and len(name.split()) >= 3))
 
 
 def parse_lines(lines: Iterable[str], group: str | None = None) -> list[IngredientLine]:
