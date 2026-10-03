@@ -18,7 +18,7 @@ from .base import Site, crawl_pages, soupify, text_of
 
 RECIPE_RE = re.compile(r"kulinaria\.ge/receptebi/(?!cat/|add/)(?P<slug>[^/?#]+)_(?P<id>\d+)/?$")
 TOP_CATEGORY_RE = re.compile(r"kulinaria\.ge/receptebi/cat/[^/]+/$")
-QTY_RE = re.compile(r"^[\d½¼¾⅓⅔⅛.,/\s–-]+$")
+QTY_RE = re.compile(r"^[\d½⅓⅔¼¾⅕⅖⅗⅘⅙⅚⅛⅜⅝⅞.,/\s–-]+$")
 
 
 class Kulinaria(Site):
