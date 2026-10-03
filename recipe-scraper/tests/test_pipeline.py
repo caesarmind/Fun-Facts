@@ -1,0 +1,126 @@
+"""End-to-end run (discover -> scrape -> nutrition -> build -> export -> compare) against fixtures."""
+import csv
+import json
+from pathlib import Path
+
+from recipe_scraper import library
+from recipe_scraper.cli import scrape_site
+from recipe_scraper.compare import compare
+from recipe_scraper.db import DB
+from recipe_scraper.export import export_all
+from recipe_scraper.http import Fetcher, FetchError
+from recipe_scraper.nutrition import FIBER_TABLE, GEMRIELIA_BUNDLE, scrape_nutrition
+from recipe_scraper.sites import SITES
+
+FX = Path(__file__).parent / "fixtures"
+
+
+def fx(name):
+    return (FX / name).read_text(encoding="utf-8")
+
+
+def sitemap(*urls, index=False):
+    tag, item = ("sitemapindex", "sitemap") if index else ("urlset", "url")
+    body = "".join(f"<{item}><loc>{u}</loc></{item}>" for u in urls)
+    return f'<?xml version="1.0"?><{tag} xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{body}</{tag}>'
+
+
+def links(*hrefs):
+    return "<html><body>" + "".join(f'<a href="{h}">x</a>' for h in hrefs) + "</body></html>"
+
+
+KUL = "/receptebi/%E1%83%91%E1%83%90%E1%83%93%E1%83%A0%E1%83%98%E1%83%AF%E1%83%90%E1%83%9C%E1%83%98-%E1%83%9C%E1%83%98%E1%83%92%E1%83%95%E1%83%96%E1%83%98%E1%83%97_116/"
+GEM = "https://gemrielia.ge/recipe/9724-kokosis-da-bananis-burtulebi-mxolod-3-ingredientit/"
+ROUTES = {
+    ("GET", "https://kulinaria.ge/receptebi/"): links("/receptebi/cat/karTuli-samzareulo/",
+                                                      "/receptebi/cat/karTuli-samzareulo/regionuli-kulinaria/"),
+    ("GET", "https://kulinaria.ge/receptebi/cat/karTuli-samzareulo/"): links(KUL, "?page=2"),
+    ("GET", "https://kulinaria.ge/receptebi/cat/karTuli-samzareulo/?page=2"): links(KUL),
+    ("GET", "https://kulinaria.ge/receptebi/ბადრიჯანი-ნიგვზით_116/"): fx("kulinaria.html"),
+    ("GET", "https://gemrielia.ge/sitemap.xml"): sitemap("https://gemrielia.ge/media/sitemaps/article_1.xml",
+                                                        "https://gemrielia.ge/media/sitemaps/recipe_1.xml", index=True),
+    ("GET", "https://gemrielia.ge/media/sitemaps/recipe_1.xml"): sitemap(GEM),
+    ("POST", "https://gemrielia.ge/api/recipe/"): fx("gemrielia_api.json"),
+    ("GET", "https://fiber.ge/recepti-sitemap.xml"): sitemap("https://fiber.ge/recepti/ajapsandali/"),
+    ("GET", "https://fiber.ge/recepti/ajapsandali/"): fx("fiber.html"),
+    ("GET", "https://samzareulo.net/sitemap.xml"): sitemap(
+        "https://samzareulo.net/receptebi/", "https://samzareulo.net/rchevebi/188-badagi.html",
+        "https://samzareulo.net/receptebi/223-imeruli-xachapuri.html"),
+    ("GET", "https://samzareulo.net/lastnews/"): links("https://samzareulo.net/receptebi/223-imeruli-xachapuri.html"),
+    ("GET", "https://samzareulo.net/receptebi/223-imeruli-xachapuri.html"): fx("samzareulo.html"),
+    ("GET", "https://kerdzebi.ge/sitemap.xml"): sitemap("https://kerdzebi.ge/kategoriis/tsomeuli",
+                                                       "https://kerdzebi.ge/recepti/pasta-carbonara-1784725429472"),
+    ("GET", "https://kerdzebi.ge"): links("/recepti/pasta-carbonara-1784725429472"),
+    ("GET", "https://kerdzebi.ge/kategoriis/tsomeuli"): links("/recepti/pasta-carbonara-1784725429472"),
+    ("GET", "https://kerdzebi.ge/recepti/pasta-carbonara-1784725429472"): fx("kerdzebi.html"),
+    ("GET", GEMRIELIA_BUNDLE): fx("gemrielia_bundle.js"),
+    ("GET", FIBER_TABLE): fx("fiber_calories.html"),
+}
+
+
+class FakeFetcher(Fetcher):
+    def __init__(self):
+        super().__init__(cache_dir=None, delay=0, respect_robots=False)
+        self.seen = []
+
+    def _request(self, method, url, *, json_body=None, allow_404=False, **kw):
+        self.seen.append((method, url, json_body))
+        if (method, url) in ROUTES:
+            return ROUTES[(method, url)]
+        if allow_404:
+            return None
+        raise FetchError(f"HTTP 404 for {url}")
+
+
+def test_full_pipeline(tmp_path):
+    f = FakeFetcher()
+    db = DB(tmp_path / "r.db")
+    results = [scrape_site(SITES[name], f, db, None, False, False)
+               for name in ("kulinaria", "gemrielia", "fiber", "samzareulo", "kerdzebi")]
+    assert [(r["site"], r["urls"], r["scraped"], r["failed"]) for r in results] == [
+        ("kulinaria", 1, 1, 0), ("gemrielia", 1, 1, 0), ("fiber", 1, 1, 0), ("samzareulo", 1, 1, 0),
+        ("kerdzebi", 1, 1, 0)]
+    # gemrielia goes through the JSON API with the body the site's own front-end sends
+    assert ("POST", "https://gemrielia.ge/api/recipe/", {"many": False, "find": {"id": 9724}, "fields": []}) in f.seen
+    # article sitemaps are skipped, tips (/rchevebi/) are not treated as recipes
+    assert not any("article_1.xml" in u for _, u, _ in f.seen)
+    assert not any("188-badagi" in u for _, u, _ in f.seen)
+
+    # second run skips what is already stored
+    again = scrape_site(SITES["fiber"], f, db, None, False, False)
+    assert (again["already_had"], again["scraped"]) == (1, 0)
+
+    db.save_nutrition(scrape_nutrition(f))
+    stats = library.build(db)
+    assert stats["recipes"] == 5 and stats["dishes"] == 5
+
+    ing = {r["name"]: dict(r) for r in db.query("SELECT * FROM ingredients")}
+    assert ing["ბადრიჯანი"]["sites"] == 2  # kulinaria + fiber
+    assert json.loads(ing["ნიორი"]["per_site"]) == {"fiber": 1, "kulinaria": 1}
+    assert ing["ბადრიჯანი"]["kcal_100g"] == 25 and ing["ბადრიჯანი"]["nutrition_source"] == "fiber"
+    assert ing["ბანანი"]["kcal_100g"] == 89
+
+    out = tmp_path / "export"
+    counts = export_all(db, out)
+    assert counts["recipes.csv"] == 5 and counts["nutrition.csv"] == 11
+    with (out / "recipe_ingredients.csv").open(encoding="utf-8-sig") as fh:
+        rows = list(csv.DictReader(fh))
+    assert {r["source"] for r in rows} == {"kulinaria", "gemrielia", "fiber", "samzareulo", "kerdzebi"}
+
+    mine = tmp_path / "my_ingredients.csv"
+    mine.write_text("name,aliases\nბადრიჯანი,\nნიგვზი,ნიგოზი\nავოკადო,\n", encoding="utf-8")
+    dishes = tmp_path / "my_dishes.txt"
+    dishes.write_text("ბადრიჯანი ნიგვზით\nაჯაფსანდალი\nხინკალი\n", encoding="utf-8")
+    s = compare(db, tmp_path / "cmp", mine, dishes)
+    assert (s["n_ingredients"], s["n_dishes"]) == (len(ing), 5)
+    assert s["vs_mine"]["ingredients"]["matched_exact"] == 2 and s["vs_mine"]["ingredients"]["mine_not_on_sites"] == 1
+    assert s["vs_mine"]["dishes"]["matched_exact"] == 2 and s["vs_mine"]["dishes"]["mine_not_on_sites"] == 1
+    missing = (tmp_path / "cmp" / "ingredients_missing_from_my_library.csv").read_text(encoding="utf-8-sig")
+    assert "სპაგეტი" in missing and "\nბადრიჯანი," not in missing
+    md = (tmp_path / "cmp" / "summary.md").read_text(encoding="utf-8")
+    assert f"Ingredient library: **{len(ing)}** distinct ingredients" in md
+    assert "Your ingredients vs. the sites" in md and "- yours: 3, matched exactly: 2" in md
+
+    # Without user lists the comparison still writes the cross-site matrices and summary
+    s2 = compare(db, tmp_path / "cmp2")
+    assert s2["vs_mine"] == {} and (tmp_path / "cmp2" / "dish_site_matrix.csv").exists()
