@@ -113,6 +113,17 @@ class Fetcher:
         if check_robots and not self.allowed(url):
             raise FetchError(f"disallowed by robots.txt: {url}")
 
+        resp = self._send(method, url, json_body=json_body, headers=headers, allow_404=allow_404)
+        if resp is None:
+            return None
+        text = _decode(resp)
+        if use_cache:
+            self._cache_put(key, text)
+        return text
+
+    def _send(self, method: str, url: str, *, json_body: Any = None, headers: dict | None = None,
+              allow_404: bool = False) -> requests.Response | None:
+        """One polite request: per-host rate limit, retries with backoff, dead-host short-circuit."""
         host = urlsplit(url).netloc
         if host in self._dead_hosts:
             raise FetchError(f"{host} is unreachable (connection failed earlier); skipping {url}")
@@ -138,16 +149,22 @@ class Fetcher:
                 if resp.status_code >= 400:
                     self.stats["errors"] += 1
                     raise FetchError(f"HTTP {resp.status_code} for {url}")
-                text = _decode(resp)
-                if use_cache:
-                    self._cache_put(key, text)
-                return text
+                return resp
             if attempt < self.retries:
                 time.sleep(2 ** attempt)
         self.stats["errors"] += 1
         if isinstance(last_exc, (requests.ConnectionError, requests.Timeout)):
             self._dead_hosts.add(host)  # don't spend the retry budget again on every URL of a dead/blocked host
         raise FetchError(f"giving up on {url}: {last_exc}")
+
+    def get_bytes(self, url: str) -> tuple[bytes, str]:
+        """Binary download (images). Not cached here: callers keep the file themselves."""
+        if self.offline:
+            raise FetchError(f"offline: {url}")
+        if not self.allowed(url):
+            raise FetchError(f"disallowed by robots.txt: {url}")
+        resp = self._send("GET", url)
+        return resp.content, resp.headers.get("Content-Type", "").split(";")[0].strip()
 
     def get(self, url: str, **kw: Any) -> str:
         text = self._request("GET", url, **kw)

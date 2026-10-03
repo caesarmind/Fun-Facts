@@ -44,7 +44,8 @@ def export_all(db: DB, out_dir: str | Path) -> dict[str, int]:
     for r in ing_rows:
         ing_by_recipe.setdefault(r["recipe_id"], []).append(dict(r))
 
-    recipes = db.query("SELECT * FROM recipes ORDER BY source, id")
+    recipes = db.query("SELECT r.*, i.path AS image_file FROM recipes r LEFT JOIN images i ON i.recipe_id = r.id "
+                       "ORDER BY r.source, r.id")
     with (out / "recipes.jsonl").open("w", encoding="utf-8") as f:
         for r in recipes:
             d = dict(r)
@@ -57,10 +58,11 @@ def export_all(db: DB, out_dir: str | Path) -> dict[str, int]:
     counts["recipes.csv"] = _write_csv(
         out / "recipes.csv",
         ["id", "source", "url", "title", "dish_name", "dish_key", "categories", "servings", "total_minutes",
-         "calories_site", "n_ingredients", "ingredients", "parse_method"],
+         "calories_site", "n_ingredients", "ingredients", "parse_method", "image_url", "image_file"],
         ([r["id"], r["source"], r["url"], r["title"], r["dish_name"], r["dish_key"], _j(r["categories"]),
           r["servings"], r["total_minutes"], r["calories"], r["n_ingredients"],
-          " | ".join(i["name"] for i in ing_by_recipe.get(r["id"], [])), r["parse_method"]] for r in recipes))
+          " | ".join(i["name"] for i in ing_by_recipe.get(r["id"], [])), r["parse_method"], r["image"],
+          r["image_file"]] for r in recipes))
 
     titles = {r["id"]: (r["source"], r["title"], r["url"]) for r in recipes}
     counts["recipe_ingredients.csv"] = _write_csv(
@@ -81,13 +83,15 @@ def export_all(db: DB, out_dir: str | Path) -> dict[str, int]:
           _j(r["examples"]), r["kcal_100g"], r["protein_100g"], r["fat_100g"], r["carbs_100g"],
           r["nutrition_source"], r["nutrition_name"]] for r in ingredients))
 
-    dishes = db.query("SELECT * FROM dishes ORDER BY sites DESC, recipes DESC, name")
+    dishes = db.query("SELECT d.*, i.path AS image_file FROM dishes d LEFT JOIN images i "
+                      "ON i.recipe_id = d.image_recipe_id ORDER BY d.sites DESC, d.recipes DESC, d.name")
     counts["dish_library.csv"] = _write_csv(
         out / "dish_library.csv",
         ["key", "name", "recipes", "sites", *[f"in_{s}" for s in sources], "title_variants", "categories",
-         "top_ingredients", "urls"],
+         "top_ingredients", "image_url", "image_file", "urls"],
         ([r["key"], r["name"], r["recipes"], r["sites"], *[json.loads(r["per_site"]).get(s, 0) for s in sources],
-          _j(r["variants"]), _j(r["categories"]), _j(r["top_ingredients"]), _j(r["urls"], " ")] for r in dishes))
+          _j(r["variants"]), _j(r["categories"]), _j(r["top_ingredients"]), r["image"], r["image_file"],
+          _j(r["urls"], " ")] for r in dishes))
 
     nutrition = db.query("SELECT * FROM nutrition ORDER BY source, grp, name")
     if nutrition:

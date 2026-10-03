@@ -62,6 +62,10 @@ ROUTES = {
 }
 
 
+PNG = bytes.fromhex("89504e470d0a1a0a0000000d4948445200000001000000010806000000"
+                    "1f15c4890000000d49444154789c6360000002000154a24f5d0000000049454e44ae426082")
+
+
 class FakeFetcher(Fetcher):
     def __init__(self):
         super().__init__(cache_dir=None, delay=0, respect_robots=False)
@@ -74,6 +78,10 @@ class FakeFetcher(Fetcher):
         if allow_404:
             return None
         raise FetchError(f"HTTP 404 for {url}")
+
+    def get_bytes(self, url):
+        self.seen.append(("GET", url, None))
+        return PNG, "image/png"
 
 
 def test_full_pipeline(tmp_path):
@@ -120,6 +128,19 @@ def test_full_pipeline(tmp_path):
     assert summary["fiber"] == (1, 9, 1, 9, 0)  # recipes, lines, dishes, ingredients, failures
     assert summary["all sites"][0] == 5
     assert wb["Recipes"].max_row == 6
+
+    # photos: every recipe has one; one per dish -> 5 files
+    from recipe_scraper.images import download_images
+    assert db.query("SELECT COUNT(*) FROM recipes WHERE image LIKE 'https://%'")[0][0] == 5
+    assert all(r[0] for r in db.query("SELECT image FROM dishes"))
+    st = download_images(db, f, tmp_path / "img", per_dish=True)
+    assert st == {"downloaded": 5, "already_had": 0, "failed": 0}
+    assert download_images(db, f, tmp_path / "img", per_dish=True)["already_had"] == 5
+    files = db.query("SELECT path FROM images")
+    assert len(files) == 5 and all(Path(r[0]).read_bytes() == PNG for r in files)
+    export_all(db, out)
+    with (out / "dish_library.csv").open(encoding="utf-8-sig") as fh:
+        assert all(row["image_file"].endswith(".png") for row in csv.DictReader(fh))
 
     mine = tmp_path / "my_ingredients.csv"
     mine.write_text("name,aliases\nბადრიჯანი,\nნიგვზი,ნიგოზი\nავოკადო,\n", encoding="utf-8")

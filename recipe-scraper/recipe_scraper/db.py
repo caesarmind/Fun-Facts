@@ -66,7 +66,13 @@ CREATE TABLE IF NOT EXISTS ingredients (
 );
 CREATE TABLE IF NOT EXISTS dishes (
     key TEXT PRIMARY KEY, name TEXT, recipes INTEGER, sites INTEGER, per_site TEXT,
-    variants TEXT, categories TEXT, top_ingredients TEXT, urls TEXT
+    variants TEXT, categories TEXT, top_ingredients TEXT, urls TEXT,
+    image TEXT, image_recipe_id INTEGER       -- representative photo (first recipe of the dish with one)
+);
+CREATE TABLE IF NOT EXISTS images (
+    recipe_id INTEGER PRIMARY KEY REFERENCES recipes(id) ON DELETE CASCADE,
+    url TEXT, path TEXT, content_type TEXT, bytes INTEGER, sha1 TEXT,
+    width INTEGER, height INTEGER, thumb_path TEXT, fetched_at TEXT
 );
 CREATE TABLE IF NOT EXISTS nutrition (
     source TEXT, grp TEXT, name TEXT, key TEXT,
@@ -92,6 +98,11 @@ class DB:
         self.conn.execute("PRAGMA journal_mode=WAL")
         self.conn.execute("PRAGMA foreign_keys=ON")
         self.conn.executescript(SCHEMA)
+        # databases created before photos were added
+        cols = {r[1] for r in self.conn.execute("PRAGMA table_info(dishes)")}
+        for col, typ in (("image", "TEXT"), ("image_recipe_id", "INTEGER")):
+            if col not in cols:
+                self.conn.execute(f"ALTER TABLE dishes ADD COLUMN {col} {typ}")
         self.lock = threading.Lock()
 
     def has(self, url: str) -> bool:

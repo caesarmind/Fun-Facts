@@ -84,6 +84,8 @@ def export_xlsx(db: DB, path: str | Path) -> Path:
         "Recipe ingredients: every ingredient line as published (raw) and parsed (name, quantity, unit, grams/ml).",
         "  ml uses 1 tbsp (ს/კ) = 15 ml, 1 tsp (ჩ/კ) = 5 ml, 1 cup (ჭიქა) = 250 ml. grams are only filled from weights.",
         "Recipes: calories_site is what the site prints (usually per serving), not computed.",
+        "Photos: 'photo url' is the recipe's main image on the site; 'photo file' is filled after running the images "
+        "command. Photos belong to the sites/authors — get permission before showing them in an app.",
         f"Counts as of {date.today().isoformat()}.",
     ]
     for line in notes:
@@ -102,22 +104,26 @@ def export_xlsx(db: DB, path: str | Path) -> Path:
           {1: 28, 4: 18, 9 + len(sources): 30, 10 + len(sources): 40, 11 + len(sources): 24, 12 + len(sources): 60})
 
     # ---- Dish library
-    dishes = db.query("SELECT * FROM dishes ORDER BY sites DESC, recipes DESC, name")
+    dishes = db.query("SELECT d.*, i.path AS image_file FROM dishes d LEFT JOIN images i "
+                      "ON i.recipe_id = d.image_recipe_id ORDER BY d.sites DESC, d.recipes DESC, d.name")
+    n = len(sources)
     sheet("Dish library",
           ["dish", "recipes", "sites", "key", *[f"in_{s}" for s in sources], "title variants", "categories",
-           "top ingredients", "example url"],
+           "top ingredients", "photo url", "photo file", "example url"],
           ([r["name"], r["recipes"], r["sites"], r["key"], *[json.loads(r["per_site"]).get(s, 0) for s in sources],
-            j(r["variants"]), j(r["categories"]), j(r["top_ingredients"], ", "),
+            j(r["variants"]), j(r["categories"]), j(r["top_ingredients"], ", "), r["image"], r["image_file"],
             (json.loads(r["urls"]) or [""])[0]] for r in dishes),
-          {1: 34, 4: 18, 5 + len(sources): 50, 6 + len(sources): 30, 7 + len(sources): 60, 8 + len(sources): 50})
+          {1: 34, 4: 18, 5 + n: 50, 6 + n: 30, 7 + n: 60, 8 + n: 50, 9 + n: 30, 10 + n: 50})
 
     # ---- Recipes
-    recipes = db.query("SELECT * FROM recipes ORDER BY source, id")
+    recipes = db.query("SELECT r.*, i.path AS image_file FROM recipes r LEFT JOIN images i ON i.recipe_id = r.id "
+                       "ORDER BY r.source, r.id")
     sheet("Recipes",
-          ["id", "source", "title", "dish", "categories", "servings", "minutes", "calories_site", "ingredients", "url"],
+          ["id", "source", "title", "dish", "categories", "servings", "minutes", "calories_site", "ingredients", "url",
+           "photo url", "photo file"],
           ([r["id"], r["source"], r["title"], r["dish_name"], j(r["categories"]), r["servings"], r["total_minutes"],
-            r["calories"], r["n_ingredients"], r["url"]] for r in recipes),
-          {1: 7, 3: 40, 4: 30, 5: 30, 10: 60})
+            r["calories"], r["n_ingredients"], r["url"], r["image"], r["image_file"]] for r in recipes),
+          {1: 7, 3: 40, 4: 30, 5: 30, 10: 60, 11: 60, 12: 30})
 
     # ---- Recipe ingredients
     titles = {r["id"]: r["title"] for r in recipes}

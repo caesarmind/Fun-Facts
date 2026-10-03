@@ -103,5 +103,5 @@ class Kerdzebi(Site):
                 rec.steps.append(f"{text_of(h4)}: {body}")
         img = article.find("img", src=True)
         if img:
-            rec.image = img["src"]
+            rec.image = self.abs(img["src"])
         return self.fallback(rec, soup)

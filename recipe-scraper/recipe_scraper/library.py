@@ -151,9 +151,10 @@ def build(db: DB, aliases_path: str | Path | None = None) -> dict[str, int]:
     display_of = {row[0]: row[1] for row in ing_rows}
 
     # ---- dishes
-    recipes = db.query("SELECT id, source, title, categories, url FROM recipes")
+    recipes = db.query("SELECT id, source, title, categories, url, image FROM recipes ORDER BY id")
     dgroups: dict[str, dict] = defaultdict(lambda: {"variants": Counter(), "recipes": [], "per_site": Counter(),
-                                                    "categories": Counter(), "ingredients": Counter(), "urls": []})
+                                                    "categories": Counter(), "ingredients": Counter(), "urls": [],
+                                                    "image": None})
     vocab = Counter(w for r in recipes if not is_genitive_recipe_title(r["title"] or "")
                     for w in clean(r["title"]).split())
     dish_updates = []
@@ -175,6 +176,8 @@ def build(db: DB, aliases_path: str | Path | None = None) -> dict[str, int]:
         g["ingredients"].update(set(recipe_keys.get(r["id"], [])))
         if len(g["urls"]) < 10:
             g["urls"].append(r["url"])
+        if g["image"] is None and r["image"]:
+            g["image"] = (r["image"], r["id"])
     dish_rows = [(
         key, g["variants"].most_common(1)[0][0], len(g["recipes"]), len(g["per_site"]),
         json.dumps(dict(sorted(g["per_site"].items())), ensure_ascii=False),
@@ -182,6 +185,7 @@ def build(db: DB, aliases_path: str | Path | None = None) -> dict[str, int]:
         json.dumps([c for c, _ in g["categories"].most_common(5)], ensure_ascii=False),
         json.dumps([display_of.get(k, k) for k, _ in g["ingredients"].most_common(12)], ensure_ascii=False),
         json.dumps(g["urls"], ensure_ascii=False),
+        *(g["image"] or (None, None)),
     ) for key, g in dgroups.items()]
 
     with db.lock, db.conn:
@@ -190,7 +194,9 @@ def build(db: DB, aliases_path: str | Path | None = None) -> dict[str, int]:
         db.conn.executemany("INSERT INTO ingredients VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", ing_rows)
         db.conn.executemany("UPDATE recipes SET dish_name=?, dish_key=? WHERE id=?", dish_updates)
         db.conn.execute("DELETE FROM dishes")
-        db.conn.executemany("INSERT INTO dishes VALUES (?,?,?,?,?,?,?,?,?)", dish_rows)
+        db.conn.executemany("INSERT INTO dishes (key, name, recipes, sites, per_site, variants, categories,"
+                            " top_ingredients, urls, image, image_recipe_id) VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+                            dish_rows)
     return {"ingredient_lines": len(rows), "ingredients": len(ing_rows), "recipes": len(recipes),
             "dishes": len(dish_rows)}
 

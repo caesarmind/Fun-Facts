@@ -120,6 +120,12 @@ def cmd_export(db: DB, out: str) -> None:
         log.info("pip install openpyxl to also get recipe_library.xlsx")
 
 
+def cmd_images(a, db: DB, per_dish: bool, limit: int | None = None) -> None:
+    from .images import download_images
+    stats = download_images(db, _fetcher(a), a.images_dir, per_dish=per_dish, thumb=a.thumb, limit=limit)
+    log.info("images: %s -> %s", stats, a.images_dir)
+
+
 def cmd_stats(a, db: DB) -> None:
     for r in db.query("SELECT source, COUNT(*) n, SUM(n_ingredients) lines FROM recipes GROUP BY source"):
         f = db.query("SELECT COUNT(*) FROM failures WHERE source=?", (r["source"],))[0][0]
@@ -162,6 +168,10 @@ def main(argv: list[str] | None = None) -> int:
     compare_args(p)
     p.add_argument("--out", default="data/export")
     p.add_argument("--no-nutrition", action="store_true")
+    p.add_argument("--images", choices=["none", "dish", "all"], default="none",
+                   help="also download photos: one per dish, or one per recipe (default: none)")
+    p.add_argument("--images-dir", default="data/images")
+    p.add_argument("--thumb", type=int, help="also save JPEG copies resized to this many pixels (needs pillow)")
 
     p = sub.add_parser("scrape", help="discover and scrape recipes into the database")
     site_args(p)
@@ -181,6 +191,12 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("target", help="URL or path to an .html file")
     p.add_argument("--url", help="original URL when parsing a file")
     p.add_argument("--render", action="store_true")
+    p = sub.add_parser("images", help="download recipe photos (after scrape)")
+    p.add_argument("--per-dish", action="store_true", help="one photo per dish instead of one per recipe")
+    p.add_argument("--images-dir", default="data/images")
+    p.add_argument("--thumb", type=int, help="also save JPEG copies resized to this many pixels (needs pillow)")
+    p.add_argument("--limit", type=int)
+    p.add_argument("--out", default="data/export", help="export folder to refresh afterwards")
     sub.add_parser("stats", help="counts per site")
 
     a = ap.parse_args(argv)
@@ -194,6 +210,8 @@ def main(argv: list[str] | None = None) -> int:
             if not a.no_nutrition:
                 cmd_nutrition(a, db)
             log.info("libraries: %s", library.build(db, a.aliases))
+            if a.images != "none":
+                cmd_images(a, db, per_dish=a.images == "dish")
             cmd_export(db, a.out)
             s = compare(db, Path(a.out) / "compare", a.my_ingredients, a.my_dishes, a.aliases, a.fuzzy)
             log.info("compare: %d ingredients, %d dishes -> %s", s["n_ingredients"], s["n_dishes"],
@@ -215,6 +233,9 @@ def main(argv: list[str] | None = None) -> int:
             log.info("files in %s", a.out)
         elif a.cmd == "parse":
             cmd_parse(a, db)
+        elif a.cmd == "images":
+            cmd_images(a, db, a.per_dish, a.limit)
+            cmd_export(db, a.out)
         elif a.cmd == "stats":
             cmd_stats(a, db)
     finally:

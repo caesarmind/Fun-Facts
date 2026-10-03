@@ -88,6 +88,25 @@ python -m recipe_scraper parse gemrielia https://gemrielia.ge/recipe/9724-...   
 Global options: `--db`, `--cache`, `--delay`, `--offline`, `--refresh`, `--user-agent`,
 `--ignore-robots`, `-v`.
 
+## Photos
+
+Every recipe's main photo URL is stored (`image_url` in `recipes.csv`, `photo url` in the workbook),
+and every dish gets a representative photo (from its first recipe that has one). To download them:
+
+```bash
+python -m recipe_scraper images --per-dish            # one photo per dish  -> data/images/<site>/
+python -m recipe_scraper images                       # one photo per recipe
+python -m recipe_scraper images --per-dish --thumb 600   # plus 600px JPEG copies in data/images/thumbs/ (pip install pillow)
+python -m recipe_scraper run --images dish            # or as part of a full run
+```
+
+Downloads are rate-limited like pages, skip files already downloaded, and are recorded in the
+`images` table (size, SHA-1, width × height); the `photo file` / `image_file` columns are then filled.
+
+**Rights:** the photos belong to the sites or their authors. Use them as internal reference
+(e.g. to pick or check dishes) and get permission, license, or shoot your own before showing
+them in your app.
+
 ## Comparing with your library
 
 Give your lists as CSV with a `name` column (optional `aliases` column, `|`-separated) or as a
