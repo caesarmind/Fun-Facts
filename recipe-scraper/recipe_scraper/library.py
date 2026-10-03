@@ -173,4 +173,11 @@ def _nutrition_index(db: DB, aliases: dict[str, str]) -> dict[str, dict]:
         rank = (r["source"] != "fiber", fold(r["name"]) != display, len(r["name"]))
         if key not in best or rank < best[key][0]:
             best[key] = (rank, dict(r))
-    return {k: v[1] for k, v in best.items()}
+    out = {k: v[1] for k, v in best.items()}
+    # Curated picks for staples whose names differ between recipes and the tables (რძე -> "რძე 3,2%").
+    by_name = {fold(r["name"]): dict(r) for r in db.query("SELECT * FROM nutrition")}
+    text = resources.files("recipe_scraper.data").joinpath("nutrition_map.csv").read_text(encoding="utf-8")
+    for row in csv.reader(text.splitlines()):
+        if len(row) >= 2 and not row[0].startswith("#") and row[0] != "ingredient" and fold(row[1]) in by_name:
+            out[ingredient_identity(row[0], aliases)[0]] = by_name[fold(row[1])]
+    return out

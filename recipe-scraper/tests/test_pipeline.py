@@ -3,6 +3,8 @@ import csv
 import json
 from pathlib import Path
 
+import pytest
+
 from recipe_scraper import library
 from recipe_scraper.cli import scrape_site
 from recipe_scraper.compare import compare
@@ -107,6 +109,14 @@ def test_full_pipeline(tmp_path):
         rows = list(csv.DictReader(fh))
     assert {r["source"] for r in rows} == {"kulinaria", "gemrielia", "fiber", "samzareulo", "kerdzebi"}
 
+    openpyxl = pytest.importorskip("openpyxl")
+    from recipe_scraper.xlsx import export_xlsx
+    wb = openpyxl.load_workbook(export_xlsx(db, out / "recipe_library.xlsx"))
+    assert wb.sheetnames == ["Summary", "Ingredient library", "Dish library", "Recipes", "Recipe ingredients",
+                             "Nutrition tables"]
+    assert wb["Summary"]["B2"].value == "=COUNTIF(Recipes!B:B,A2)"
+    assert wb["Recipes"].max_row == 6
+
     mine = tmp_path / "my_ingredients.csv"
     mine.write_text("name,aliases\nბადრიჯანი,\nნიგვზი,ნიგოზი\nავოკადო,\n", encoding="utf-8")
     dishes = tmp_path / "my_dishes.txt"
@@ -124,3 +134,12 @@ def test_full_pipeline(tmp_path):
     # Without user lists the comparison still writes the cross-site matrices and summary
     s2 = compare(db, tmp_path / "cmp2")
     assert s2["vs_mine"] == {} and (tmp_path / "cmp2" / "dish_site_matrix.csv").exists()
+
+
+def test_curated_nutrition_map(tmp_path):
+    db = DB(tmp_path / "n.db")
+    db.save_nutrition([
+        {"source": "gemrielia", "group": "რძე", "name": n, "key": "", "kcal": k, "protein": 3, "fat": 3, "carbs": 5}
+        for n, k in (("რძე 6 %", 84), ("რძე 3,2%", 57))])
+    idx = library._nutrition_index(db, library.load_aliases())
+    assert idx[library.ingredient_identity("რძე", {})[0]]["kcal"] == 57  # not the 6% row

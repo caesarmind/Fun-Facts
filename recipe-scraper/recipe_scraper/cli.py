@@ -111,6 +111,15 @@ def cmd_parse(a, db: DB) -> None:
     print(json.dumps(rec.to_dict() if rec else None, ensure_ascii=False, indent=2))
 
 
+def cmd_export(db: DB, out: str) -> None:
+    log.info("exported: %s", export_all(db, out))
+    try:
+        from .xlsx import export_xlsx
+        log.info("workbook: %s", export_xlsx(db, Path(out) / "recipe_library.xlsx"))
+    except ImportError:
+        log.info("pip install openpyxl to also get recipe_library.xlsx")
+
+
 def cmd_stats(a, db: DB) -> None:
     for r in db.query("SELECT source, COUNT(*) n, SUM(n_ingredients) lines FROM recipes GROUP BY source"):
         f = db.query("SELECT COUNT(*) FROM failures WHERE source=?", (r["source"],))[0][0]
@@ -185,7 +194,7 @@ def main(argv: list[str] | None = None) -> int:
             if not a.no_nutrition:
                 cmd_nutrition(a, db)
             log.info("libraries: %s", library.build(db, a.aliases))
-            log.info("exported: %s", export_all(db, a.out))
+            cmd_export(db, a.out)
             s = compare(db, Path(a.out) / "compare", a.my_ingredients, a.my_dishes, a.aliases, a.fuzzy)
             log.info("compare: %d ingredients, %d dishes -> %s", s["n_ingredients"], s["n_dishes"],
                      Path(a.out) / "compare")
@@ -199,7 +208,7 @@ def main(argv: list[str] | None = None) -> int:
         elif a.cmd == "build":
             log.info("libraries: %s", library.build(db, a.aliases))
         elif a.cmd == "export":
-            log.info("exported: %s", export_all(db, a.out))
+            cmd_export(db, a.out)
         elif a.cmd == "compare":
             compare(db, a.out, a.my_ingredients, a.my_dishes, a.aliases, a.fuzzy)
             print((Path(a.out) / "summary.md").read_text(encoding="utf-8"))
